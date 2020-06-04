@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CoronaApp.Entities;
 namespace CoronaApp.Services.Models
 {
     public class Patient

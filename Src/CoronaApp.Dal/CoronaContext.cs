@@ -19,8 +19,11 @@ namespace CoronaApp.Dal
        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source = DESKTOP-1HT6NS2; Initial Catalog = Corona_DB; Integrated Security = True");
-            base.OnConfiguring(optionsBuilder);
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Data Source = ILBHARTMANLT; Initial Catalog = Corona_DB; Integrated Security = True");
+                base.OnConfiguring(optionsBuilder);
+            }
         }
         public CoronaContext(DbContextOptions<CoronaContext> options)
      : base(options)

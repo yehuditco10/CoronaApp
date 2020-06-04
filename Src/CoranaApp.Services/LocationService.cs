@@ -1,14 +1,21 @@
-﻿using System;
+﻿using CoronaApp.Services.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CoronaApp.Services
 {
-    class LocationService : ILocationService
+   public  class LocationService : ILocationService
     {
-        //public ICollection<LocationModel> Get(LocationSearchModel locationSearch)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        private readonly ILocationRepository _locationRepository;
+        public LocationService( ILocationRepository locationRepository)
+        {
+            _locationRepository = locationRepository;
+        }
+        public ICollection<Location> Get(LocationSearch locationSearch=null)
+        {
+          var res=  _locationRepository.Get(locationSearch);
+            return res;
+        }
     }
 }

@@ -13,8 +13,4 @@
     <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Entities\CoronaApp.Entities.csproj" />
-  </ItemGroup>
-
 </Project>

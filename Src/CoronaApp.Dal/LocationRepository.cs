@@ -3,38 +3,51 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CoronaApp.Dal;
 using CoronaApp.Services.Models;
 namespace CoronaApp.Services
 {
-   public class LocationRepository : ILocationRepository
+    public class LocationRepository : ILocationRepository
     {
-       public static List<Location> locations= new List<Location>()
-            {
-                new Location("Jerusalem",new DateTime(2005, 12, 12),new DateTime(2005, 11, 12),"school","111"),
-                new Location("Bney Brak",new DateTime(2004, 12, 12),new DateTime(2004, 11, 12),"park","111"),
-                new Location("Bney Brak",new DateTime(2004, 12, 12),new DateTime(2004, 11, 12),"library","111"),
-                new Location("Jerusalem",new DateTime(2005, 12, 12),new DateTime(2005, 11, 12),"restaurant","222"),
-            };
-        
-        public ICollection<Location> Get(LocationSearch locationSearch=null)
+        private readonly CoronaContext _coronaContext;
+        public LocationRepository(CoronaContext _coronaContext)
+        {
+            this._coronaContext = _coronaContext;
+        }
+        public ICollection<Location> Get(LocationSearch locationSearch = null)
         {
             try
             {
-                var list = locations;
+                var list = _coronaContext.Locations.ToList();
                 if (locationSearch.city != null && locationSearch.city != "All" && locationSearch.city != "")
                 {
                     list = list.Where(c => c.city == locationSearch.city).ToList();
-                    return list;
+                }
+                if (locationSearch.age != 0 && list.Count > 0)
+                {
+                    List<Patient> patients = _coronaContext.Patients.Where(p => p.age == locationSearch.age).ToList();
+                    if (patients.Count() > 0)
+                    {
+                        List<Location> locationsByAge = new List<Location>();
+                        foreach (var patient in patients)
+                        {
+                            locationsByAge.AddRange(list.Where(l => l.patientId == patient.id).ToList());
+                        }
+                        list = locationsByAge;
+                    }
+                }
+                if (locationSearch.startDate > DateTime.MinValue)//valid dates.
+                {
+                    list = list.Where
+                   (location => !(locationSearch.endDate <= location.startDate || locationSearch.startDate <= location.endDate)).ToList();//-------------------not perfect                  
                 }
                 return list;
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(e.ToString());
-               // return this.StatusCode(StatusCodes.Status500InternalServerError, "data failed");
+                throw new Exception("exeptio in search function");
             }
+            
         }
-
-     
     }
 }

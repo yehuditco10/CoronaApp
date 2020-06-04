@@ -164,7 +164,7 @@ function initList(listToInit) {
     let sorted = sortDates(listToInit);
     sorted.forEach(element => {
         let item = document.createElement("li", element);
-        item.innerText = element.startDate + ' ' + element.endDate + ' | ' + element.city + ' | ' + element.location
+        item.innerText = element.startDate + '  |  ' + element.endDate + '  |  ' + element.city + '  |  ' + element.location
         document.getElementById('list').appendChild(item);
     });
 }
@@ -244,7 +244,7 @@ function getLocationByAge() {
                 cleanTable();
             }
         };
-        const url = BASICURL + "LocationSearch?locationSearch.age=" + age;
+        const url = BASICURL + "Location?locationSearch.age=" + age;
         xhttp.open("GET", url, "true");
         xhttp.send();
     }
@@ -335,7 +335,7 @@ function searchByDate() {
             loadServerResponse(this.responseText);
         }
     };
-    xhttp.open("POST", BASICURL + "LocationSearch", true);  
+    xhttp.open("POST", BASICURL + "Location", true);  
     xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
     xhttp.send(JSON.stringify(body));
 
