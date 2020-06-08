@@ -81,3 +81,14 @@ h1 {
     font-size: larger;
     margin-left: 2vw;
 }
+#message{
+    color:red;
+}
+#loginPanel {
+    background-color: lightgray;
+    width: 70vw;
+    height: 8vh;
+    padding-top: 4vh;
+    padding-left: 2vw;
+    margin-bottom: 3vh;
+}

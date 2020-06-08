@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CoronaApp.Services
 {
@@ -10,6 +11,8 @@ namespace CoronaApp.Services
         Patient Get(string id);
 
         void Save(Patient patient);
-        Patient Authenticate(string userName, string password);
+        Task<Patient> Authenticate(string userName, string password);
+
+        Task<Patient> Register(Patient newPatient);
     }
 }

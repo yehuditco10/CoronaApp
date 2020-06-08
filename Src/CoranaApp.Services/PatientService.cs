@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CoronaApp.Services
 {
@@ -34,20 +35,13 @@ namespace CoronaApp.Services
              _patientRepository.Save(patient);
         }
        
-        public Patient Authenticate(string userName, string password)
+        public async Task<Patient> Authenticate(string userName, string password)
         {
-            var user=new Patient();
-            if (userName!="admin"||password!="123")
-                return null;
-            // return null if user not found
-            else
+           Patient user =await _patientRepository.IsValid(userName, password);
+            if (user == null)
             {
-                user.name = userName;
-                user.password = password;
+                return null;
             }
-              
-
-            // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings").GetSection("Secret").Value);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -61,8 +55,14 @@ namespace CoronaApp.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             user.token = tokenHandler.WriteToken(token);
-
             return user;
+        }
+
+        public async Task<Patient> Register(Patient newPatient)
+        {
+            _patientRepository.Add(newPatient);
+            var patient =await Authenticate(newPatient.name, newPatient.password);
+            return patient;
         }
     }
 }

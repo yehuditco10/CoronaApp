@@ -1,52 +1,22 @@
-﻿let locations = [
-    //{
-    //    startDate: '2020.05.05 12:00:22',
-    //    endDate: '2020.06.05 12:00:22',
-    //    city: 'Bney Brak',
-    //    location: 'school',
-    //    patientId: '111'
-    //}, {
-    //    startDate: '2020.05.05 12:00:22',
-    //    endDate: '2020.06.05 12:00:22',
-    //    city: 'Jerusalem',
-    //    location: 'library',
-    //    patientId: '111'
-    //}, {
-    //    startDate: '2020.05.05 12:00:22',
-    //    endDate: '2020.06.05 12:00:22',
-    //    city: 'Elad',
-    //    location: 'park',
-    //    patientId: '111'
-    //},
-    //{
-    //    startDate: '2020.05.05 12:00:22',
-    //    endDate: '2020.06.05 12:00:22',
-    //    city: 'Jerusalem',
-    //    location: 'school',
-    //    patientId: '222'
-    //},
-    //{
-    //    startDate: '2020.05.05 12:00:22',
-    //    endDate: '2020.06.05 12:00:22',
-    //    city: 'Tel Aviv',
-    //    location: 'school',
-    //    patientId: '333'
-    //}
-];
-
+﻿let locations = [];
 const BASICURL = "https://localhost:44381/api/";
 getListFromServer();
+const patientLocations = [];
 let added = false;
+let token;
 const searchBottun = document.getElementById('search');
 searchBottun.addEventListener("click", getLocationByPatientId);
 document.getElementById("searchAge").addEventListener("click", getLocationByAge);
-
-const patientLocations = [];
+document.getElementById("login").addEventListener("click", login);
+document.getElementById('cityInput').addEventListener("change", filterCity);
+document.getElementById('select').addEventListener("change", filterCity);
+document.getElementById('send').addEventListener("click", searchByDate);
+document.getElementById('register').addEventListener("click", addRegisterPanel);
 const helloTitle = document.createElement('h1');
 helloTitle.innerText = 'Epidemiology Report';
 
 document.getElementById("title").appendChild(helloTitle);
-
+initList(locations);
 function locationsForPatient() {
     cleanTable();
     patientId = document.getElementById('patientID').value;
@@ -59,7 +29,7 @@ function locationsForPatient() {
     if (added === false)
         addAddingOption();
 }
-function createPathTable(patientLocations,allowEdit) {
+function createPathTable(patientLocations, allowEdit) {
     const table = document.getElementById("pathsTable");
     const row = table.insertRow(0);
     const colNames = Object.getOwnPropertyNames(patientLocations[0]);
@@ -155,10 +125,30 @@ function cleanAddingOption() {
     document.getElementById('city').value = "";
     document.getElementById('location').value = "";
 }
-initList(locations);
-document.getElementById('cityInput').addEventListener("change", filterCity);
-document.getElementById('select').addEventListener("change", filterCity);
-document.getElementById('send').addEventListener("click", searchByDate );
+function addRegisterPanel() {
+    document.getElementById("loginPanel").innerHTML = "";
+    const userNameInput = document.createElement("input");
+    userNameInput.setAttribute("type", "text");
+    userNameInput.setAttribute("id", "userName");
+    document.getElementById("loginPanel").appendChild(userNameInput);
+
+    const passwordInput = document.createElement("input");
+    passwordInput.setAttribute("type", "password");
+    passwordInput.setAttribute("id", "userPassword");
+    document.getElementById("loginPanel").appendChild(passwordInput);
+
+    const userIdInput = document.createElement("input");
+    userIdInput.setAttribute("type", "text");
+    userIdInput.setAttribute("id", "userIdentity");
+    document.getElementById("loginPanel").appendChild(userIdInput);
+
+    const registerInput = document.createElement("input");
+    registerInput.setAttribute("type", "button");
+    registerInput.setAttribute("id", "registerUser");
+    registerInput.setAttribute("value", "register now");
+    registerInput.addEventListener("click", register);
+    document.getElementById("loginPanel").appendChild(registerInput);
+}
 function initList(listToInit) {
     document.getElementById('list').innerHTML = '';
     let sorted = sortDates(listToInit);
@@ -204,6 +194,9 @@ function getLocationByPatientId() {
                 if (added === false)
                     addAddingOption();
             }
+            if (this.status == 401) {
+                document.getElementById("message").innerHTML="Authentication Error , please log-in!"
+            }
             if (this.status === 404 || this.response === null) {
                 cleanTable();
                 if (added === false) {
@@ -213,6 +206,7 @@ function getLocationByPatientId() {
         };
         const url = BASICURL + "patient/" + patientid;
         xhr.open("GET", url, true);
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
         xhr.send();
     }
 }
@@ -224,7 +218,7 @@ function getLocationByAge() {
     added = false;
     if (age === "" && age === null) {
         cleanTable();
-       
+
     }
     else {
         const xhttp = new XMLHttpRequest();
@@ -236,7 +230,7 @@ function getLocationByAge() {
                 if (jResponse.length > 0) {
                     patientLocations.splice(0, patientLocations.length);
                     patientLocations.push(...jResponse);
-                    createPathTable(patientLocations,false);
+                    createPathTable(patientLocations, false);
                 }
 
             }
@@ -246,6 +240,7 @@ function getLocationByAge() {
         };
         const url = BASICURL + "Location?locationSearch.age=" + age;
         xhttp.open("GET", url, "true");
+        xhttp.setRequestHeader('Authorization', `Bearer ${token}`);
         xhttp.send();
     }
     console.log(age);
@@ -300,6 +295,82 @@ function saveChanges() {
     xhttp.open("POST", BASICURL + "patient", true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
     xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhttp.send(JSON.stringify(body));
+}
+function login() {
+    document.getElementById("message").innerHTML = ""
+
+    const name = document.getElementById("name").value;
+    const password = document.getElementById("password").value;
+    var xhttp = new XMLHttpRequest();
+    const authModel = {
+        name: name,
+        password: password
+    }
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const jResponse = JSON.parse(this.responseText);
+            token = jResponse["token"];
+            console.log(token);
+            document.getElementById("messageLogin").innerHTML = "login successed ! ";
+            document.getElementById("messageLogin").style.color = "blue";
+
+        }
+        //??
+        else if (this.status == 400) {
+            document.getElementById("messageLogin").innerHTML = "Authentication Error , please try again or register !"
+            document.getElementById("messageLogin").style.color = "red";
+        }
+       else  if (this.status == 401) {
+            document.getElementById("messageLogin").innerHTML = "Authentication Error , please try again or register !"
+            document.getElementById("messageLogin").style.color = "red";
+        }
+        
+    };
+    xhttp.open("POST", BASICURL + "patient/Authenticate", true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+    xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+
+    var json = JSON.stringify(authModel)
+    xhttp.send(json);
+    //xhttp.send(authModel);
+}
+function register() {
+    const xhttp = new XMLHttpRequest();
+    const body = {
+        name: document.getElementById("userName").value,
+        password: document.getElementById("userPassword").value,
+        id: document.getElementById("userIdentity").value
+    }
+    xhttp.onreadystatechange = function () {
+      
+        if (this.status == 200) {
+            const jResponse = JSON.parse(this.responseText);
+            token = jResponse["token"];
+            console.log(token);
+            alert("register successed ! ");
+          
+            //document.getElementById("messageLogin").innerHTML = "register successed ! ";
+            //document.getElementById("messageLogin").style.color = "blue";
+        }
+        //??
+        //else if (this.status == 400) {
+        //    document.getElementById("messageLogin").innerHTML = "Authentication Error , please try again or register !"
+        //    document.getElementById("messageLogin").style.color = "red";
+        //}
+        //else if (this.status == 401) {
+        //    document.getElementById("messageLogin").innerHTML = "Authentication Error , please try again or register !"
+        //    document.getElementById("messageLogin").style.color = "red";
+        //}
+        //else {
+        //    document.getElementById("messageLogin").innerHTML = "register failed"
+        //    document.getElementById("messageLogin").style.color = "red";
+        //}
+    };
+    xhttp.open("POST", BASICURL + "patient/register", true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+    xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhttp.send(JSON.stringify(body));
 }
 function loadServerResponse(list) {
@@ -335,8 +406,9 @@ function searchByDate() {
             loadServerResponse(this.responseText);
         }
     };
-    xhttp.open("POST", BASICURL + "Location", true);  
+    xhttp.open("POST", BASICURL + "Location", true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
     xhttp.send(JSON.stringify(body));
 
 }
