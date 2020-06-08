@@ -26,7 +26,6 @@ namespace CoronaApp.Api.Controllers
                 return BadRequest(new { message = "Username or password is incorrect" });
             return Ok(user);
         }
-
         [HttpGet]
         public IActionResult GetAll()
         {
