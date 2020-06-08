@@ -9,12 +9,10 @@ namespace CoronaApp.Services.Models
         public string id { get; set; }
         public int age { get; set; }
         public string name { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
         public string password { get; set; }
-
         public string token { get; set; }
         public List<Location> locations { get; set; }
-
 
         public Patient()
         {

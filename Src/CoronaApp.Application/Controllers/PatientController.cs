@@ -22,10 +22,10 @@ namespace CoronaApp.Api.Controllers
             _patientService = patientService;
         }
         // GET api/<PatientController>/5
-        [HttpGet("{id}")]
-        public object Get(string id)
+        [HttpGet]
+        public object Get()
         {
-           var x= System.Security.Claims.ClaimsPrincipal.Current.Claims.ToList();
+            var id = User.Claims.SingleOrDefault(p=>p.Type.Contains("name")).Value;
             try
             {
                 return _patientService.Get(id);
@@ -54,6 +54,15 @@ namespace CoronaApp.Api.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody]Patient newPatient)
+        {
+            var patient = await _patientService.Register(newPatient);
+            if (patient == null)
+                return BadRequest(new { message = "Register Failed" });
+            return Ok(patient);
+        }
         // PUT api/<PatientController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
@@ -63,9 +72,9 @@ namespace CoronaApp.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]AuthenticateModel model)
+        public async Task<IActionResult> Authenticate([FromBody]Authenticate authModel)
         {
-            var user = _patientService.Authenticate(model.UserName, model.Password.ToString());
+            var user =await _patientService.Authenticate(authModel.name,authModel.password);
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
             return Ok(user);
