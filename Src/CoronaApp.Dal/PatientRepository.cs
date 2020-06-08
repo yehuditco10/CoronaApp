@@ -40,7 +40,7 @@ namespace CoronaApp.Services
 
         public async Task<Patient> IsValid(string userName, string password)
         {
-            List<Patient> li = _context.Patients.ToList();
+            
             Patient patient = _context.Patients
                 .FirstOrDefault(p => p.name == userName && p.password == password);
             if (patient != null)
@@ -73,6 +73,8 @@ namespace CoronaApp.Services
 
 
         }
+
+       
 
 
 

@@ -48,7 +48,8 @@ namespace CoronaApp.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.password)
+                    new Claim(ClaimTypes.Name, user.name),
+                     new Claim("userName", user.name)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -64,5 +65,7 @@ namespace CoronaApp.Services
             var patient =await Authenticate(newPatient.name, newPatient.password);
             return patient;
         }
+
+     
     }
 }

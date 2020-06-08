@@ -195,7 +195,7 @@ function getLocationByPatientId() {
                     addAddingOption();
             }
             if (this.status == 401) {
-                document.getElementById("message").innerHTML="Authentication Error , please log-in!"
+                document.getElementById("message").innerHTML = "Authentication Error , please log-in!"
             }
             if (this.status === 404 || this.response === null) {
                 cleanTable();
@@ -315,6 +315,7 @@ function login() {
             console.log(token);
             document.getElementById("messageLogin").innerHTML = "login successed ! ";
             document.getElementById("messageLogin").style.color = "blue";
+            getUserName();
 
         }
         //??
@@ -322,11 +323,11 @@ function login() {
             document.getElementById("messageLogin").innerHTML = "Authentication Error , please try again or register !"
             document.getElementById("messageLogin").style.color = "red";
         }
-       else  if (this.status == 401) {
+        else if (this.status == 401) {
             document.getElementById("messageLogin").innerHTML = "Authentication Error , please try again or register !"
             document.getElementById("messageLogin").style.color = "red";
         }
-        
+
     };
     xhttp.open("POST", BASICURL + "patient/Authenticate", true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
@@ -344,13 +345,14 @@ function register() {
         id: document.getElementById("userIdentity").value
     }
     xhttp.onreadystatechange = function () {
-      
+
         if (this.status == 200) {
             const jResponse = JSON.parse(this.responseText);
             token = jResponse["token"];
             console.log(token);
             alert("register successed ! ");
-          
+            getUserName();
+
             //document.getElementById("messageLogin").innerHTML = "register successed ! ";
             //document.getElementById("messageLogin").style.color = "blue";
         }
@@ -372,6 +374,25 @@ function register() {
     xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
     xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhttp.send(JSON.stringify(body));
+}
+function getUserName() {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.status == 200) {
+            const jResponse = JSON.parse(this.responseText);
+            document.getElementById("patientName").innerHTML = "Hello " + jResponse;
+
+        }
+        if (this.status === 404 || this.response === null) {
+
+        }
+
+        const url = BASICURL + "patient/username";
+        xhttp.open("GET", url, "true");
+        xhttp.setRequestHeader('Authorization', `Bearer ${token}`);
+        xhttp.send();
+    }
+
 }
 function loadServerResponse(list) {
     const jLocations = JSON.parse(list);
