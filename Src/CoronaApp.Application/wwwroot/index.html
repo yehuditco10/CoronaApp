@@ -8,36 +8,42 @@
 </head>
 
 <body>
-    <h1>Report Your Path</h1>
-    <h4>By Yehudit Cohen</h4>
-    <input id="patientID" type="text" placeholder="Search by PatientId">
-    <img src="./Img/searchGray.png" id="search" alt="search">
-    <span id="or">or</span>
-    <input id="age" type="text" placeholder="Search by age">
-    <img src="./Img/searchBlue.png" id="searchAge" alt="searchage">
-    <table id="pathsTable">
-    </table>
-    <div id="addLocation"></div>
-    <div id="saveLocations"></div>
+    <div id="register">
+        <input id="passwordR" type="text" placeholder="input your password"/>
+        <input id="usernameR" type="text" placeholder="input your username"/>
+    </div>
+    <div>
+        <h1>Report Your Path</h1>
+        <h4>By Yehudit Cohen</h4>
+        <input id="patientID" type="text" placeholder="Search by PatientId">
+        <img src="./Img/searchGray.png" id="search" alt="search">
+        <span id="or">or</span>
+        <input id="age" type="text" placeholder="Search by age">
+        <img src="./Img/searchBlue.png" id="searchAge" alt="searchage">
+        <table id="pathsTable">
+        </table>
+        <div id="addLocation"></div>
+        <div id="saveLocations"></div>
 
-    <div id="title"></div>
-    <h4>By Batya Hartman</h4>
-    <input id="cityInput" placeholder="Input your city" value="">
-    <select id="select">
-        <option>All</option>
-        <option>Jerusalem</option>
-        <option>Bney Brak</option>
-        <option>Elad</option>
-        <option>Tel Aviv</option>
+        <div id="title"></div>
+        <h4>By Batya Hartman</h4>
+        <input id="cityInput" placeholder="Input your city" value="">
+        <select id="select">
+            <option>All</option>
+            <option>Jerusalem</option>
+            <option>Bney Brak</option>
+            <option>Elad</option>
+            <option>Tel Aviv</option>
 
-    </select>
-    <section>
-        <input id="startDate"type="date" placeholder="Input start date searching"/>
-        <input id="endDate"type="date" placeholder="Input end date searching"/>
-        <button id="send">send</button>
-    </section>
-    <ul id="list">
-    </ul>
+        </select>
+        <section>
+            <input id="startDate" type="date" placeholder="Input start date searching" />
+            <input id="endDate" type="date" placeholder="Input end date searching" />
+            <button id="send">send</button>
+        </section>
+        <ul id="list">
+        </ul>
+    </div>
     <script src="./JS/index.js"></script>
     <script src="./JS/promise.js"></script>
 

@@ -25,13 +25,13 @@ namespace CoronaApp.Api.Controllers
         [HttpGet("{id}")]
         public object Get(string id)
         {
+           var x= System.Security.Claims.ClaimsPrincipal.Current.Claims.ToList();
             try
             {
                 return _patientService.Get(id);
             }
             catch (Exception e)
             {
-
                 throw e;
             }
 
@@ -41,6 +41,7 @@ namespace CoronaApp.Api.Controllers
         [HttpPost]
         public void Post([FromBody]Patient patient)
         {
+          var x=  User.Claims;
             try
             {
                 _patientService.Save(patient);
@@ -59,13 +60,23 @@ namespace CoronaApp.Api.Controllers
         {
 
         }
-        //[HttpGet("{id}")]
-        //public void func1(string id)
-        //{
-        //    PatientModel p = new PatientModel(id);
-        //    PatientRepository patientRepo = new PatientRepository();
-        //    patientRepo.func(p);
-        //}
 
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate([FromBody]AuthenticateModel model)
+        {
+            var user = _patientService.Authenticate(model.UserName, model.Password.ToString());
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+            return Ok(user);
+        }
+       
+        public class AuthenticateModel
+        {
+            public int Id { get; set; }
+            public string Password { get; set; }
+            public string UserName { get; set; }
+            public string Token { get; set; }
+        }
     }
 }

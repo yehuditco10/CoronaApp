@@ -33,7 +33,7 @@ namespace CoronaApp.Api
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILocationRepository, LocationRepository>();
-            services.AddScoped<IUserService, UserService>();
+           // services.AddScoped<IUserService, UserService>();
             services.AddCors();
               var appSettingsSection = Configuration.GetSection("AppSettings").GetSection("Secret");
             services.Configure<AppSetting>(appSettingsSection);
@@ -58,7 +58,7 @@ namespace CoronaApp.Api
             });
 
             // configure DI for application services
-            services.AddScoped<IUserService, UserService>();
+            //services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

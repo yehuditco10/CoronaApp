@@ -35,7 +35,6 @@
 ];
 
 const BASICURL = "https://localhost:44381/api/";
-getListFromServer();
 let added = false;
 const searchBottun = document.getElementById('search');
 searchBottun.addEventListener("click", getLocationByPatientId);
@@ -155,7 +154,7 @@ function cleanAddingOption() {
     document.getElementById('city').value = "";
     document.getElementById('location').value = "";
 }
-initList(locations);
+//initList(locations);
 document.getElementById('cityInput').addEventListener("change", filterCity);
 document.getElementById('select').addEventListener("change", filterCity);
 document.getElementById('send').addEventListener("click", searchByDate );
@@ -213,6 +212,7 @@ function getLocationByPatientId() {
         };
         const url = BASICURL + "patient/" + patientid;
         xhr.open("GET", url, true);
+        xhttp.setRequestHeader("Authorization", "Bearer " + myToken.token);
         xhr.send();
     }
 }
@@ -298,6 +298,7 @@ function saveChanges() {
         }
     };
     xhttp.open("POST", BASICURL + "patient", true);
+    xhttp.setRequestHeader("Authorization", "Bearer " + myToken.token);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
     xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhttp.send(JSON.stringify(body));
@@ -310,7 +311,28 @@ function loadServerResponse(list) {
         initList(jLocations)
     }
 }
+let myToken;
+getToken()
+function getToken() {
+    const body = {
+        Password: "123",
+        UserName: "admin"
+    }
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            alert("succes" + this.responseText);
+            myToken = JSON.parse(this.responseText)
+            getListFromServer();
+        }
+    };
+    xhttp.open("POST", BASICURL + "patient/Authenticate", true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+    xhttp.send(JSON.stringify(body));
+
+}
 function getListFromServer(city = "") {
+    console.log(myToken)
     if (city != "") city = "?locationSearch.city=" + city;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -319,8 +341,10 @@ function getListFromServer(city = "") {
         }
     };
     xhttp.open("GET", BASICURL + "location" + city, true);
+    xhttp.setRequestHeader("Authorization", "Bearer " + myToken.token);
     xhttp.send();
 }
+
 function searchByDate() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
