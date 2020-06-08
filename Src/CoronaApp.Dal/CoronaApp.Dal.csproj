@@ -17,10 +17,10 @@
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.6.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Entities\CoronaApp.Entities.csproj" />
     <ProjectReference Include="..\CoranaApp.Services\CoronaApp.Services.csproj" />
   </ItemGroup>
 

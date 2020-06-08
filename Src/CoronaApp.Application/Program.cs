@@ -30,17 +30,17 @@ namespace CoronaApp.Api
 
             try
             {
-               // Log.Information("Getting the motors running...");
+                // Log.Information("Getting the motors running...");
 
                 BuildWebHost(args).Run();
             }
             catch (Exception ex)
             {
-               // Log.Fatal(ex, "Host terminated unexpectedly");
+                // Log.Fatal(ex, "Host terminated unexpectedly");
             }
             finally
             {
-              //  Log.CloseAndFlush();
+                //  Log.CloseAndFlush();
             }
             //Log.Logger = new LoggerConfiguration()
             //  .WriteTo
@@ -67,6 +67,7 @@ namespace CoronaApp.Api
              .UseConfiguration(Configuration)
              .UseSerilog()
              .Build();
+ 
         //public static IHostBuilder CreateHostBuilder(string[] args) =>
         //    Host.CreateDefaultBuilder(args)
         //        .ConfigureWebHostDefaults(webBuilder =>

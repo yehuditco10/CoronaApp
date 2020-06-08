@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using CoronaApp.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 using CoronaApp.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoronaApp.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LocationController : ControllerBase
     {
         private readonly ILocationService _locationService;

@@ -8,7 +8,12 @@ namespace CoronaApp.Services
    public  class LocationService : ILocationService
     {
         private readonly ILocationRepository _locationRepository;
-        public LocationService( ILocationRepository locationRepository)
+
+        public LocationService()
+        {
+        }
+
+        public LocationService(ILocationRepository locationRepository)
         {
             _locationRepository = locationRepository;
         }
