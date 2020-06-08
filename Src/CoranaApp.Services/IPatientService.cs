@@ -10,5 +10,6 @@ namespace CoronaApp.Services
         Patient Get(string id);
 
         void Save(Patient patient);
+        Patient Authenticate(string userName, string password);
     }
 }

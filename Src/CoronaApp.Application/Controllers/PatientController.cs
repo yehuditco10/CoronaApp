@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using CoronaApp.Services;
 using CoronaApp.Services.Models;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoronaApp.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PatientController : ControllerBase
     {
         private readonly IPatientService _patientService;
@@ -30,7 +32,6 @@ namespace CoronaApp.Api.Controllers
             }
             catch (Exception e)
             {
-
                 throw e;
             }
 
@@ -58,13 +59,16 @@ namespace CoronaApp.Api.Controllers
         {
 
         }
-        //[HttpGet("{id}")]
-        //public void func1(string id)
-        //{
-        //    PatientModel p = new PatientModel(id);
-        //    PatientRepository patientRepo = new PatientRepository();
-        //    patientRepo.func(p);
-        //}
+
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate([FromBody]AuthenticateModel model)
+        {
+            var user = _patientService.Authenticate(model.UserName, model.Password.ToString());
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+            return Ok(user);
+        }
 
     }
 }
