@@ -13,5 +13,6 @@ namespace CoronaApp.Services
         void Save(Patient patient);
         Task<Patient> IsValid(string userName, string password);
         void Add(Patient newPatient);
+       
     }
 }

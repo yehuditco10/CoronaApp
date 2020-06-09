@@ -14,5 +14,6 @@ namespace CoronaApp.Services
         Task<Patient> Authenticate(string userName, string password);
 
         Task<Patient> Register(Patient newPatient);
+       
     }
 }
