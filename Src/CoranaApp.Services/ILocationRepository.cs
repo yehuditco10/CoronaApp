@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CoronaApp.Services
 {
     public interface ILocationRepository
     {
-        ICollection<Location> Get(LocationSearch locationSearch);
+        Task<ICollection<Location>> GetAsync(LocationSearch locationSearch);
     }
 }

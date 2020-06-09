@@ -3,8 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using CoronaApp.Dal;
 using CoronaApp.Services.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace CoronaApp.Services
 {
     public class LocationRepository : ILocationRepository
@@ -14,11 +17,11 @@ namespace CoronaApp.Services
         {
             this._coronaContext = _coronaContext;
         }
-        public ICollection<Location> Get(LocationSearch locationSearch = null)
+        public async Task< ICollection<Location>> GetAsync(LocationSearch locationSearch = null)
         {
             try
             {
-                var list = _coronaContext.Locations.ToList();
+                var list = await _coronaContext.Locations.ToListAsync();
                 if (locationSearch.city != null && locationSearch.city != "All" && locationSearch.city != "")
                 {
                     list = list.Where(c => c.city == locationSearch.city).ToList();

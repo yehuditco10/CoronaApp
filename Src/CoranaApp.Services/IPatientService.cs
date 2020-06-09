@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace CoronaApp.Services
 {
-   public interface IPatientService
+    public interface IPatientService
     {
-        Patient Get(string id);
+        Task<Patient> GetAsync(string id);
 
-        void Save(Patient patient);
-        Task<Patient> Authenticate(string userName, string password);
+        Task SaveAsync(Patient patient);
+        Task<Patient> AuthenticateAsync(string userName, string password);
 
-        Task<Patient> Register(Patient newPatient);
-       
+        Task<Patient> RegisterAsync(Patient newPatient);
+
     }
 }

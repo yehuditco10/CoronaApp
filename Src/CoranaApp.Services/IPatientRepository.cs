@@ -8,11 +8,11 @@ namespace CoronaApp.Services
 {
     public interface IPatientRepository
     {
-        Patient Get(string id);
+        Task<Patient> GetAsync(string id);
 
-        void Save(Patient patient);
-        Task<Patient> IsValid(string userName, string password);
-        void Add(Patient newPatient);
-       
+        Task SaveAsync(Patient patient);
+        Task<Patient> IsValidAsync(string userName, string password);
+        Task AddAsync(Patient newPatient);
+
     }
 }

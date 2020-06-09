@@ -25,19 +25,19 @@ namespace CoronaApp.Services
             _patientRepository = patientRepository;
             _configuration = configuration;
         }
-        public Patient Get(string id)
+        public async Task<Patient> GetAsync(string id)
         {
-            return _patientRepository.Get(id);
+            return await _patientRepository.GetAsync(id);
         }
 
-        public void Save(Patient patient)
+        public async Task SaveAsync(Patient patient)
         {
-             _patientRepository.Save(patient);
+            await _patientRepository.SaveAsync(patient);
         }
-       
-        public async Task<Patient> Authenticate(string userName, string password)
+
+        public async Task<Patient> AuthenticateAsync(string userName, string password)
         {
-           Patient user =await _patientRepository.IsValid(userName, password);
+            Patient user = await _patientRepository.IsValidAsync(userName, password);
             if (user == null)
             {
                 return null;
@@ -60,10 +60,10 @@ namespace CoronaApp.Services
             return user;
         }
 
-        public async Task<Patient> Register(Patient newPatient)
+        public async Task<Patient> RegisterAsync(Patient newPatient)
         {
-            _patientRepository.Add(newPatient);
-            var patient =await Authenticate(newPatient.name, newPatient.password);
+            await _patientRepository.AddAsync(newPatient);
+            var patient = await AuthenticateAsync(newPatient.name, newPatient.password);
             return patient;
         }
     }

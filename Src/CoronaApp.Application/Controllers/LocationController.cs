@@ -21,14 +21,14 @@ namespace CoronaApp.Api.Controllers
         }
         //GET: api/<LocationController>
         [HttpGet]
-        public IEnumerable<Location> Get([FromQuery] LocationSearch locationSearch = null)
+        public async Task< IEnumerable<Location>> Get([FromQuery] LocationSearch locationSearch = null)
         {
-            return _locationService.Get(locationSearch);
+            return await _locationService.GetAsync(locationSearch);
         }
         [HttpPost]
-        public IEnumerable<Location> Post(LocationSearch locationSearch)
+        public async Task<IEnumerable<Location>> Post(LocationSearch locationSearch)
         {
-            return _locationService.Get(locationSearch);
+            return await _locationService.GetAsync(locationSearch);
         }
     }
 }

@@ -19,11 +19,10 @@ namespace CoronaApp.Services
         {
             _context = coronaContext;
         }
-        public Patient Get(string id)
+        public async Task<Patient> GetAsync(string id)
         {
-            
-            Patient patient = _context.Patients.Include(p => p.locations)
-                 .FirstOrDefault(pa => pa.id == id);
+            Patient patient =await _context.Patients.Include(p => p.locations)
+                 .FirstOrDefaultAsync(pa => pa.id == id);
             if (patient == null)
             {
                 Log.Error("Patient {pateient} didn't find", id);
@@ -38,32 +37,32 @@ namespace CoronaApp.Services
             throw new Exception("no location");
         }
 
-        public async Task<Patient> IsValid(string userName, string password)
+        public async Task<Patient> IsValidAsync(string userName, string password)
         {
           //  List<Patient> li = _context.Patients.ToList();
-            Patient patient = _context.Patients
-                .FirstOrDefault(p => p.name == userName && p.password == password);
+            Patient patient =await _context.Patients
+                .FirstOrDefaultAsync(p => p.name == userName && p.password == password);
             if (patient != null)
                 return patient;
             return null;
         }
 
-        public void Add(Patient newPatient)
+        public async Task AddAsync(Patient newPatient)
         {
             //todo validations
             _context.Patients.Add(newPatient);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Save(Patient patient)
+        public async Task SaveAsync(Patient patient)
         {
 
             try
             {
-                List<Location> locationsToUpdate = _context.Locations.Where(l => l.patientId == patient.id).ToList();
+                List<Location> locationsToUpdate =await _context.Locations.Where(l => l.patientId == patient.id).ToListAsync();
                 _context.Locations.RemoveRange(locationsToUpdate);
-                _context.Locations.AddRange(patient.locations);
-                _context.SaveChanges();
+                await _context.Locations.AddRangeAsync(patient.locations);
+                await _context.SaveChangesAsync();
                 Log.Information("saved locations for patient {pateient}", patient.id);
             }
             catch (Exception)
