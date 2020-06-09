@@ -27,14 +27,14 @@ namespace CoronaApp.Api.Controllers
         [HttpGet]
         public object Get()
         {
-            var id = User.Claims.SingleOrDefault(p => p.Type.Contains("name")).Value;
+            var id = User.Claims.SingleOrDefault(p => p.Type.Contains("userId")).Value;
             try
             {
                 return _patientService.Get(id);
             }
             catch (Exception e)
             {
-                throw e;
+                return BadRequest("no loactions");
             }
 
         }
@@ -64,20 +64,8 @@ namespace CoronaApp.Api.Controllers
                 return BadRequest(new { message = "Register Failed" });
             return Ok(patient);
         }
-        // GET api/<PatientController>/5
-        [HttpGet("{id}")]
-        public object Get(string id)
-        {
-            try
-            {
-                return _patientService.Get(id);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-        }
+        
+       
         [HttpGet("username")]
         public async Task<string> GetUserNameByJWT(string jwt)
         {
