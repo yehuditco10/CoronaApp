@@ -1,11 +1,9 @@
 ﻿let locations = [];
 
-
 const BASICURL = "https://localhost:44381/api/";
-//getListFromServer();
 const patientLocations = [];
 let added = false;
-let token;
+let token="";
 const searchBottun = document.getElementById('search');
 searchBottun.addEventListener("click", getLocationByPatientId);
 document.getElementById("searchAge").addEventListener("click", getLocationByAge);
@@ -324,7 +322,6 @@ function getCookie(cookieName) {
 function login() {
    
     document.getElementById("message").innerHTML = ""
-
     const name = document.getElementById("name").value;
     const password = document.getElementById("password").value;
     var xhttp = new XMLHttpRequest();
@@ -438,7 +435,7 @@ function getListFromServer(city = "") {
         }
     };
     xhttp.open("GET", BASICURL + "location" + city, true);
-    xhttp.setRequestHeader("Authorization", "Bearer " + myToken.token);
+    xhttp.setRequestHeader("Authorization", `Bearer ${token}`);
     xhttp.send();
 }
 function searchByDate() {

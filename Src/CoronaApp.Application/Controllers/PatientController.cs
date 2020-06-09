@@ -63,8 +63,7 @@ namespace CoronaApp.Api.Controllers
                 return BadRequest(new { message = "Register Failed" });
             return Ok(patient);
         }
-        
-       
+  
         [HttpGet("username")]
         public async Task<string> GetUserNameByJWT(string jwt)
         {
