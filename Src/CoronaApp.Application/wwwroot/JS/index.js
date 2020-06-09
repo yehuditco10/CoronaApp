@@ -8,8 +8,7 @@ const searchBottun = document.getElementById('search');
 searchBottun.addEventListener("click", getLocationByPatientId);
 document.getElementById("searchAge").addEventListener("click", getLocationByAge);
 document.getElementById("login").addEventListener("click", login);
-document.getElementById('cityInput').addEventListener("change", filterCity);
-document.getElementById('select').addEventListener("change", filterCity);
+//document.getElementById('select').addEventListener("change", filterCity);
 document.getElementById('send').addEventListener("click", searchByDate);
 document.getElementById('register').addEventListener("click", addRegisterPanel);
 const helloTitle = document.createElement('h1');
@@ -151,13 +150,18 @@ function addRegisterPanel() {
     document.getElementById("loginPanel").appendChild(registerInput);
 }
 function initList(listToInit) {
-    document.getElementById('list').innerHTML = '';
-    let sorted = sortDates(listToInit);
-    sorted.forEach(element => {
-        let item = document.createElement("li", element);
-        item.innerText = element.startDate + '  |  ' + element.endDate + '  |  ' + element.city + '  |  ' + element.location
-        document.getElementById('list').appendChild(item);
-    });
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    if (listToInit !== undefined) {
+        let sorted = sortDates(listToInit);
+        sorted.forEach(element => {
+            let item = document.createElement("li", element);
+            item.innerText = element.startDate + '  |  ' + element.endDate + '  |  ' + element.city + '  |  ' + element.location
+            list.appendChild(item);
+        });
+    }
+    else
+        list.innerHTML = 'No data match to your search!'
 }
 function filterCity() {
     let selected = this.value;
@@ -339,7 +343,7 @@ function login() {
             document.getElementById("messageLogin").style.color = "blue";
             getUserName();
             getLocationByPatientId();
-
+            getListFromServer()
         }
         //??
         else if (this.status == 400) {
@@ -424,8 +428,6 @@ function loadServerResponse(list) {
         initList(jLocations)
     }
 }
-
-
 function getListFromServer(city = "") {
     if (city != "") city = "?locationSearch.city=" + city;
     var xhttp = new XMLHttpRequest();
@@ -441,7 +443,9 @@ function getListFromServer(city = "") {
 function searchByDate() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
+    const city = document.getElementById('select').value;
     const body = {
+        city:city,
         startDate: startDate,
         endDate: endDate
     }
@@ -454,7 +458,7 @@ function searchByDate() {
     };
     xhttp.open("POST", BASICURL + "Location", true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
-    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhttp.setRequestHeader('Authorization', `Bearer ${token}`);
     xhttp.send(JSON.stringify(body));
 
 }
