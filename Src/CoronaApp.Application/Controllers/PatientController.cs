@@ -27,7 +27,7 @@ namespace CoronaApp.Api.Controllers
         [HttpGet]
         public object Get()
         {
-            var id = User.Claims.SingleOrDefault(p=>p.Type.Contains("name")).Value;
+            var id = User.Claims.SingleOrDefault(p => p.Type.Contains("name")).Value;
             try
             {
                 return _patientService.Get(id);
@@ -37,7 +37,7 @@ namespace CoronaApp.Api.Controllers
                 throw e;
             }
 
-
+        }
         // POST api/<PatientController>
         [HttpPost]
         public void Post([FromBody]Patient patient)
