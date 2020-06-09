@@ -35,10 +35,9 @@
 ];
 
 const BASICURL = "https://localhost:44381/api/";
-getListFromServer();
 const patientLocations = [];
 let added = false;
-let token;
+let token="";
 const searchBottun = document.getElementById('search');
 searchBottun.addEventListener("click", getLocationByPatientId);
 document.getElementById("searchAge").addEventListener("click", getLocationByAge);
@@ -51,7 +50,6 @@ const helloTitle = document.createElement('h1');
 helloTitle.innerText = 'Epidemiology Report';
 
 document.getElementById("title").appendChild(helloTitle);
-initList(locations);
 function locationsForPatient() {
     cleanTable();
     patientId = document.getElementById('patientID').value;
@@ -205,16 +203,15 @@ function sortDates(listToSort) {
     return listToSort.sort(compareDates);
 }
 function getLocationByPatientId() {
-    console.log(added);
     const patientid = document.getElementById('patientID').value;
     document.getElementById("age").value = "";
-    if (patientid === "" || patientid === null) {
-        cleanTable();
-        added = false;
-        document.getElementById("addLocation").innerHTML = "";
-        document.getElementById("saveLocations").innerHTML = "";
-    }
-    else {
+    //if (patientid === "" || patientid === null) {
+    //    cleanTable();
+    //    added = false;
+    //    document.getElementById("addLocation").innerHTML = "";
+    //    document.getElementById("saveLocations").innerHTML = "";
+    //}
+    //else {
         const xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -239,12 +236,13 @@ function getLocationByPatientId() {
                 }
             }
         };
-        const url = BASICURL + "patient/" + patientid;
+        //const url = BASICURL + "patient/" + patientid;////בלי jwt
+        const url = BASICURL + "patient";
         xhr.open("GET", url, true);
         xhr.setRequestHeader('Authorization', `Bearer ${token}`);
         xhr.send();
     }
-}
+//}
 function getLocationByAge() {
     const age = document.getElementById("age").value;
     document.getElementById("addLocation").innerHTML = "";
@@ -280,7 +278,6 @@ function getLocationByAge() {
     }
     console.log(age);
 }
-
 //function save -return patient
 
 //function saveChangesAsync() {
@@ -311,7 +308,6 @@ function getLocationByAge() {
 //        locations.push(...l);
 //    });
 //}
-
 function saveChanges() {
     var xhttp = new XMLHttpRequest();
     const id = document.getElementById('patientID').value;
@@ -335,7 +331,6 @@ function saveChanges() {
 }
 function login() {
     document.getElementById("message").innerHTML = ""
-
     const name = document.getElementById("name").value;
     const password = document.getElementById("password").value;
     var xhttp = new XMLHttpRequest();
@@ -351,7 +346,6 @@ function login() {
             document.getElementById("messageLogin").innerHTML = "login successed ! ";
             document.getElementById("messageLogin").style.color = "blue";
             getUserName();
-
         }
         //??
         else if (this.status == 400) {
@@ -437,26 +431,25 @@ function loadServerResponse(list) {
         initList(jLocations)
     }
 }
-let myToken;
-getToken()
-function getToken() {
-    const body = {
-        Password: "123",
-        UserName: "admin"
-    }
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            alert("succes" + this.responseText);
-            myToken = JSON.parse(this.responseText)
-            getListFromServer();
-        }
-    };
-    xhttp.open("POST", BASICURL + "patient/Authenticate", true);
-    xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
-    xhttp.send(JSON.stringify(body));
+//בעיקרון מיותר כי מקבלים רק דרך לוגין או רישום
+//function getToken() {
+//    const body = {
+//        Password: "123",
+//        UserName: "admin"
+//    }
+//    const xhttp = new XMLHttpRequest();
+//    xhttp.onreadystatechange = function () {
+//        if (this.readyState == 4 && this.status == 200) {
+//            alert("succes" + this.responseText);
+//            token = JSON.parse(this.responseText)
+//            getListFromServer();
+//        }
+//    };
+//    xhttp.open("POST", BASICURL + "patient/Authenticate", true);
+//    xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+//    xhttp.send(JSON.stringify(body));
 
-}
+//}
 function getListFromServer(city = "") {
     if (city != "") city = "?locationSearch.city=" + city;
     var xhttp = new XMLHttpRequest();
@@ -466,7 +459,7 @@ function getListFromServer(city = "") {
         }
     };
     xhttp.open("GET", BASICURL + "location" + city, true);
-    xhttp.setRequestHeader("Authorization", "Bearer " + myToken.token);
+    xhttp.setRequestHeader("Authorization", `Bearer ${token}`);
     xhttp.send();
 }
 function searchByDate() {
