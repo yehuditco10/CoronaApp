@@ -27,14 +27,14 @@ namespace CoronaApp.Api.Controllers
         [HttpGet]
         public object Get()
         {
-            var id = User.Claims.SingleOrDefault(p => p.Type.Contains("name")).Value;
+            var id = User.Claims.SingleOrDefault(p => p.Type.Contains("userId")).Value;
             try
             {
                 return _patientService.Get(id);
             }
             catch (Exception e)
             {
-                throw e;
+                return BadRequest("no loactions");
             }
 
         }

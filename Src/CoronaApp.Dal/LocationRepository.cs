@@ -45,7 +45,7 @@ namespace CoronaApp.Services
             }
             catch
             {
-                throw new Exception("exeptio in search function");
+                throw new Exception("exeption in search function");
             }
             
         }
