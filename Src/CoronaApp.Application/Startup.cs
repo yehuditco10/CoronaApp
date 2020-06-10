@@ -10,6 +10,9 @@ using CoronaApp.Api.Middleware;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.IO;
+using System.Reflection;
+using System;
 
 namespace CoronaApp.Api
 {
@@ -58,12 +61,21 @@ namespace CoronaApp.Api
             });
             services.AddSwaggerGen(setupAction =>
             {
-                setupAction.SwaggerDoc("LibraryOpenApiSpecification",
+                setupAction.SwaggerDoc("CoronaAppOpenApiSpecification",
                     new Microsoft.OpenApi.Models.OpenApiInfo()
                     {
-                        Title = "Library Api",
-                        Version = "1"
-                    }); ;
+                        Title = "CoronaApp",
+                        Version = "1",
+                        Description = "Through this api you can get the corona locations",
+                        Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+                        {
+                            Name = "Yehudit Cohen",
+                            Email = "cyehudit10@gmail.com"
+                        }
+                    });
+                var xmlCommentFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlCommentFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentFile);
+                setupAction.IncludeXmlComments(xmlCommentFullPath);
             });
             // configure DI for application services
             //services.AddScoped<IUserService, UserService>();
@@ -101,11 +113,14 @@ namespace CoronaApp.Api
                 endpoints.MapControllers();
             });
             app.UseSwagger();
-            app.UseSwaggerUI(setupAction=>
+            app.UseSwaggerUI(setupAction =>
             {
                 setupAction.SwaggerEndpoint(
-                    "/swagger/LibraryOpenApiSpecification/swagger.json",
-                    "Library Api");
+                    "/swagger/CoronaAppOpenApiSpecification/swagger.json",
+                    "CoronaApp");
+
+                //in the beggining
+                setupAction.RoutePrefix = "";
             });
             app.UseStaticFiles();
            // app.UseMvc();
