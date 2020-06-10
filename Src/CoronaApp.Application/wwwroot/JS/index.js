@@ -404,7 +404,6 @@ function getUserName() {
         if (this.status == 200) {
            // const jResponse = JSON.parse(this.responseText);
             document.getElementById("patientName").innerHTML = "Hello " + this.responseText;
-
         }
         if (this.status === 404 || this.response === null) {
 
