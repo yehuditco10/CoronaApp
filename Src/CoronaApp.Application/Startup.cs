@@ -25,7 +25,7 @@ namespace CoronaApp.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-           
+
             services.AddDbContext<CoronaContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("coronaConnection")));
@@ -33,9 +33,9 @@ namespace CoronaApp.Api
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILocationRepository, LocationRepository>();
-           // services.AddScoped<IUserService, UserService>();
+            // services.AddScoped<IUserService, UserService>();
             services.AddCors();
-              var appSettingsSection = Configuration.GetSection("AppSettings").GetSection("Secret");
+            var appSettingsSection = Configuration.GetSection("AppSettings").GetSection("Secret");
             services.Configure<AppSetting>(appSettingsSection);
 
             var key = Encoding.ASCII.GetBytes(appSettingsSection.Value);
@@ -56,7 +56,15 @@ namespace CoronaApp.Api
                     ValidateAudience = false
                 };
             });
-
+            services.AddSwaggerGen(setupAction =>
+            {
+                setupAction.SwaggerDoc("LibraryOpenApiSpecification",
+                    new Microsoft.OpenApi.Models.OpenApiInfo()
+                    {
+                        Title = "Library Api",
+                        Version = "1"
+                    }); ;
+            });
             // configure DI for application services
             //services.AddScoped<IUserService, UserService>();
         }
@@ -92,7 +100,16 @@ namespace CoronaApp.Api
             {
                 endpoints.MapControllers();
             });
+            app.UseSwagger();
+            app.UseSwaggerUI(setupAction=>
+            {
+                setupAction.SwaggerEndpoint(
+                    "/swagger/LibraryOpenApiSpecification/swagger.json",
+                    "Library Api");
+            });
             app.UseStaticFiles();
+           // app.UseMvc();
+
 
             //middelware
             //app.Use(async (context, next) =>
