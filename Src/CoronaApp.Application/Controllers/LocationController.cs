@@ -12,6 +12,7 @@ namespace CoronaApp.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    
     public class LocationController : ControllerBase
     {
         private readonly ILocationService _locationService;
@@ -20,6 +21,11 @@ namespace CoronaApp.Api.Controllers
             _locationService = locationService;
         }
         //GET: api/<LocationController>
+        /// <summary>
+        /// cdvyijokp
+        /// </summary>
+        /// <param name="locationSearch"></param>
+        /// <returns>njyutyfghbio</returns>
         [HttpGet]
         public async Task< IEnumerable<Location>> Get([FromQuery] LocationSearch locationSearch = null)
         {

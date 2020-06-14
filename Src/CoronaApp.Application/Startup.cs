@@ -36,7 +36,6 @@ namespace CoronaApp.Api
             // services.AddScoped<IUserService, UserService>();
             services.AddCors();
             var appSettingsSection = Configuration.GetSection("AppSettings").GetSection("Secret");
-            services.Configure<AppSetting>(appSettingsSection);
 
             var key = Encoding.ASCII.GetBytes(appSettingsSection.Value);
             services.AddAuthentication(x =>
@@ -63,10 +62,10 @@ namespace CoronaApp.Api
                     {
                         Title = "Library Api",
                         Version = "1"
-                    }); ;
+                    });
+               // AuthenticationServiceCollectionExtensions()
             });
-            // configure DI for application services
-            //services.AddScoped<IUserService, UserService>();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,9 +102,10 @@ namespace CoronaApp.Api
             app.UseSwagger();
             app.UseSwaggerUI(setupAction=>
             {
-                setupAction.SwaggerEndpoint(
-                    "/swagger/LibraryOpenApiSpecification/swagger.json",
-                    "Library Api");
+            setupAction.SwaggerEndpoint(
+                "/swagger/LibraryOpenApiSpecification/swagger.json",
+                "Library Api");
+                   setupAction.RoutePrefix = ""; 
             });
             app.UseStaticFiles();
            // app.UseMvc();

@@ -7,10 +7,10 @@ namespace CoronaApp.Services.Models
 {
   public  class Authenticate
     {
-     //   [Required]
+       [Required]
         public string name { get; set; }
 
-      //  [Required]
+        [Required]
         public string password { get; set; }
     }
 }
