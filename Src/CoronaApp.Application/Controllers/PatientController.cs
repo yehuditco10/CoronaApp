@@ -8,6 +8,7 @@ using CoronaApp.Services.Models;
 using Serilog;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoronaApp.Api.Controllers
@@ -72,8 +73,15 @@ namespace CoronaApp.Api.Controllers
             var userNameClaim = claimsIdentity.FindFirst("userName");
             return userNameClaim.Value;
         }
-        
+        /// <summary>
+        /// authenticate patient
+        /// </summary>
+        /// <param name="authModel"></param>
+        /// <returns>An actionResult of type patient - with his JWT</returns>
+        /// <response code="200">Returns the JWT</response>
         [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Patient))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]Authenticate authModel)
         {

@@ -5,11 +5,21 @@ using System.Text;
 
 namespace CoronaApp.Services.Models
 {
-  public  class Authenticate
+    /// <summary>
+    /// Authenticate user
+    /// </summary>
+    public class Authenticate
     {
-       [Required]
+        /// <summary>
+        /// The name of the patient
+        /// </summary>
+        [Required]
+        [MinLength(2)]
         public string name { get; set; }
 
+        /// <summary>
+        /// The password of the patient
+        /// </summary>
         [Required]
         public string password { get; set; }
     }

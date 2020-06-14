@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CoronaApp.Api</name>
+    </assembly>
+    <members>
+        <member name="M:CoronaApp.Api.Controllers.PatientController.Authenticate(CoronaApp.Services.Models.Authenticate)">
+            <summary>
+            authenticate patient
+            </summary>
+            <param name="authModel"></param>
+            <returns>An actionResult of type patient - with his JWT</returns>
+            <response code="200">Returns the JWT</response>
+        </member>
+    </members>
+</doc>
