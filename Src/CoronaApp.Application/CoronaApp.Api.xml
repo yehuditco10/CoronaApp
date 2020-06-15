@@ -4,6 +4,13 @@
         <name>CoronaApp.Api</name>
     </assembly>
     <members>
+        <member name="M:CoronaApp.Api.Controllers.LocationController.Get(CoronaApp.Services.Models.LocationSearch)">
+            <summary>
+            cdvyijokp
+            </summary>
+            <param name="locationSearch"></param>
+            <returns>njyutyfghbio</returns>
+        </member>
         <member name="M:CoronaApp.Api.Controllers.PatientController.Authenticate(CoronaApp.Services.Models.Authenticate)">
             <summary>
             authenticate patient

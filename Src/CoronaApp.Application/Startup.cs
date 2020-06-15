@@ -39,7 +39,7 @@ namespace CoronaApp.Api
             // services.AddScoped<IUserService, UserService>();
             services.AddCors();
             var appSettingsSection = Configuration.GetSection("AppSettings").GetSection("Secret");
-            services.Configure<AppSetting>(appSettingsSection);
+            //services.Configure<AppSetting>(appSettingsSection);
 
             var key = Encoding.ASCII.GetBytes(appSettingsSection.Value);
             services.AddAuthentication(x =>
@@ -120,7 +120,7 @@ namespace CoronaApp.Api
                     "CoronaApp");
 
                 //in the beggining
-                setupAction.RoutePrefix = "";
+               // setupAction.RoutePrefix = "";
             });
             app.UseStaticFiles();
            // app.UseMvc();
