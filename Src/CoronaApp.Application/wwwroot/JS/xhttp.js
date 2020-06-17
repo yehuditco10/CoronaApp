@@ -27,12 +27,13 @@
         const http = new XMLHttpRequest();
         return new Promise((resolve, reject) => {
             http.onreadystatechange = function () {
-                if (this.readyState === 4 || this.status === 200) {
+                if (this.readyState === 4 && this.status === 200) {
                     resolve(JSON.parse(this.responseText));
 
                 }
-                if (this.readyState == 4 || this.status !== 200) {
-                    reject({ statusCode: this.status, response: JSON.parse(this.responseText) });
+                if (this.readyState == 4 && this.status !== 200) {
+                    //reject({ statusCode: this.status, response: JSON.parse(this.responseText) });
+                    reject(console.log("faild"));
                 }
             };
             http.open("GET", `${xhttp.BASICURL()}${url}`, "true");

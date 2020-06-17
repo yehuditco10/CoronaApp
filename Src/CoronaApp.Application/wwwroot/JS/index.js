@@ -1,6 +1,6 @@
 ﻿import xhttp from './xhttp.js';
-//import location from './location';
-//import patient from './patient';
+//import location from './location.js';
+import patient from './patient.js';
 
 let added = false;
 
@@ -304,7 +304,7 @@ function saveChanges() {
 
     xhttp.post("patient", body).then(
         resolve => sucsses(resolve),
-        reject => console.log(`save changes failed" ${reject}`)
+        reject => console.log(`save changes failed"${reject}`)
     );
     function sucsses(data) {
 
@@ -386,6 +386,7 @@ function register() {
 function getUserName() {
     xhttp.get("patient/username").then(
         resolve => document.getElementById("patientName").innerHTML = "Hello " + resolve)
+
 }
 function loadServerResponse(list) {
     if (list.length > 0) {

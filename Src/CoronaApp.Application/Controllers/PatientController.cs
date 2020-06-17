@@ -67,7 +67,7 @@ namespace CoronaApp.Api.Controllers
   
         //Async?
         [HttpGet("username")]
-        public async Task<string> GetUserNameByJWT()
+        public string GetUserNameByJWT()
         {
             var claimsIdentity = User.Identity as ClaimsIdentity;
             var userNameClaim = claimsIdentity.FindFirst("userName");
