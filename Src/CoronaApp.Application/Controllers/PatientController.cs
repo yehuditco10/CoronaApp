@@ -67,11 +67,11 @@ namespace CoronaApp.Api.Controllers
   
         //Async?
         [HttpGet("username")]
-        public string GetUserNameByJWT()
+        public ActionResult GetUserNameByJWT()
         {
             var claimsIdentity = User.Identity as ClaimsIdentity;
             var userNameClaim = claimsIdentity.FindFirst("userName");
-            return userNameClaim.Value;
+            return Ok(new { name = userNameClaim.Value });
         }
         /// <summary>
         /// authenticate patient
