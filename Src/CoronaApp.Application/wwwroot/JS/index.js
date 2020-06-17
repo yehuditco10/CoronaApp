@@ -13,7 +13,7 @@ function getLocationByPatientId() {
     function sucsses(dataFromServer) {
         cleanTable();
         const jLocations = dataFromServer["locations"];
-        if (jLocations.length > 0) {
+        if (jLocations !== undefined && jLocations.length > 0) {
             patient.patientLocations.splice(0, patient.patientLocations.length);
             patient.patientLocations.push(...jLocations);
             createPathTable(patient.patientLocations, true);
@@ -332,7 +332,7 @@ function login() {
         console.log(token);
         document.getElementById("messageLogin").innerHTML = "login successed ! ";
         document.getElementById("messageLogin").style.color = "blue";
-        getUserName();
+       // getUserName();
         getLocationByPatientId();
         getListFromServer();
     }
