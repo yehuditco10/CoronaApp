@@ -4,6 +4,75 @@
 
 let added = false;
 
+function getLocationByPatientId() {
+    document.getElementById("age").value = '';
+    xhttp.get("patient").then(
+        resolve => sucsses(resolve),
+        reject => failed(reject));
+
+    function sucsses(dataFromServer) {
+        cleanTable();
+        const jLocations = dataFromServer["locations"];
+        if (jLocations.length > 0) {
+            patient.patientLocations.splice(0, patient.patientLocations.length);
+            patient.patientLocations.push(...jLocations);
+            createPathTable(patient.patientLocations, true);
+        }
+        if (added === false)
+            addAddingOption();
+    }
+    function failed(error) {
+        if (error.status == 401) {
+            document.getElementById("message").innerHTML = "Authentication Error , please log-in!"
+        }
+        if (error.status === 404 || error.response === null) {
+            cleanTable();
+            if (added === false) {
+                addAddingOption();
+            }
+        }
+    };
+}
+//}class yt {
+//    static async getLocationByPatientId() {
+//        document.getElementById("age").value = '';
+//        //xhttp.get("patient").then(
+//        //    resolve => sucsses(resolve),
+//        //    reject => failed(reject))
+//        try {
+//            const dataFromServer = await xhttp.get("patient");
+//            sucsses(dataFromServer);
+//        }
+//        catch (e) {
+//            failed(e);
+//        }
+
+
+//        function sucsses(dataFromServer) {
+//            cleanTable();
+//            const jLocations = dataFromServer["locations"];
+//            if (jLocations.length > 0) {
+//                patient.patientLocations.splice(0, patient.patientLocations.length);
+//                patient.patientLocations.push(...jLocations);
+//                createPathTable(patient.patientLocations, true);
+//            }
+//            if (added === false)
+//                addAddingOption();
+//        }
+//        function failed(error) {
+//            if (error.status == 401) {
+//                document.getElementById("message").innerHTML = "Authentication Error , please log-in!"
+//            }
+//            if (error.status === 404 || error.response === null) {
+//                cleanTable();
+//                if (added === false) {
+//                    addAddingOption();
+//                }
+//            }
+//        };
+
+//    }
+//}
 const searchBottun = document.getElementById('search');
 searchBottun.addEventListener("click", getLocationByPatientId);
 document.getElementById("searchAge").addEventListener("click", getLocationByAge);
@@ -168,35 +237,8 @@ function onInit() {
     if (token !== "")
         getLocationByPatientId();
 }
-function getLocationByPatientId() {
-    document.getElementById("age").value = '';
-    xhttp.get("patient").then(
-        resolve => sucsses(resolve),
-        reject => failed(reject))
-    function sucsses(dataFromServer) {
-        cleanTable();
-        const jLocations = dataFromServer["locations"];
-        if (jLocations.length > 0) {
-            patient.patientLocations.splice(0, patient.patientLocations.length);
-            patient.patientLocations.push(...jLocations);
-            createPathTable(patient.patientLocations, true);
-        }
-        if (added === false)
-            addAddingOption();
-    }
-    function failed(error) {
-        if (error.status == 401) {
-            document.getElementById("message").innerHTML = "Authentication Error , please log-in!"
-        }
-        if (error.status === 404 || error.response === null) {
-            cleanTable();
-            if (added === false) {
-                addAddingOption();
-            }
-        }
-    };
 
-}
+
 function getLocationByAge() {
     const age = document.getElementById("age").value;
     document.getElementById("addLocation").innerHTML = "";
@@ -284,9 +326,8 @@ function login() {
         resolve => sucsses(resolve),
         reject => failed(reject)
     )
-    console.log(xhttp.try())
     function sucsses(data) {
-        token = data["token"];
+        const token = data["token"];
         document.cookie = `token= ${token}`;
         console.log(token);
         document.getElementById("messageLogin").innerHTML = "login successed ! ";
@@ -360,9 +401,9 @@ function getListFromServer() {
 function searchByDate() {
     const body = {
         city: document.getElementById('select').value,
-        startDate:document.getElementById('startDate').value,
+        startDate: document.getElementById('startDate').value,
         endDate: document.getElementById('endDate').value
     }
     xhttp.post("Location", body).then(
-        resolve => loadServerResponse(resolve))       
+        resolve => loadServerResponse(resolve))
 }

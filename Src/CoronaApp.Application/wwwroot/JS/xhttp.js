@@ -1,12 +1,13 @@
 ﻿export default class xhttp {
-     BASICURL = "https://localhost:44381/api/";
-     token() {
-        return getCookie("token");
+    static BASICURL() {
+        return "https://localhost:44381/api/";
     }
-    static try() {
-        al
-
-}
+    static token() {
+        return xhttp.getCookie("token");
+    }
+//    static try() {
+//        al
+//}
     static getCookie(cookieName) {
         var name = cookieName + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
@@ -23,9 +24,9 @@
         return "";
     }
     static get(url) {
-        const xhttp = new XMLHttpRequest();
+        const http = new XMLHttpRequest();
         return new Promise((resolve, reject) => {
-            xhttp.onreadystatechange = function () {
+            http.onreadystatechange = function () {
                 if (this.readyState === 4 || this.status === 200) {
                     resolve(JSON.parse(this.responseText));
 
@@ -34,15 +35,15 @@
                     reject({ statusCode: this.status, response: JSON.parse(this.responseText) });
                 }
             };
-            xhttp.open("GET", `${this.BASICURL()} ${url}`, "true");
-            xhttp.setRequestHeader('Authorization', `Bearer ${this.token()}`);
-            xhttp.send();
+            http.open("GET", `${xhttp.BASICURL()}${url}`, "true");
+            http.setRequestHeader('Authorization', `Bearer ${xhttp.token()}`);
+            http.send();
         })
     }
     static post(url, body) {
         return new Promise(function (resolve, reject) {
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
+            var http = new XMLHttpRequest();
+            http.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     resolve(JSON.parse(this.responseText));
                 }
@@ -50,12 +51,15 @@
                     reject({ statusCode: this.status, response: JSON.parse(this.responseText) });
                 }
             };
-            const base = "https://localhost:44381/api/" ;
-            xhttp.open("POST", `${base} ${url}`, true);
-            xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
-            xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
-            xhttp.setRequestHeader('Authorization', `Bearer ${this.token()}`);
-            xhttp.send(JSON.stringify(body));
+            const base = "https://localhost:44381/api/";
+            http.open("POST", `${base}${url}`, true);
+            http.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+            http.setRequestHeader("Access-Control-Allow-Origin", "*");
+            const token = xhttp.token();
+            if (token !== "") {
+                http.setRequestHeader('Authorization', `Bearer ${token}`);
+            }
+            http.send(JSON.stringify(body));
         });
     }
 }
