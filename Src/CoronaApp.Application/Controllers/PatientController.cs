@@ -98,7 +98,7 @@ namespace CoronaApp.Api.Controllers
             bool success =  _patientService.post(patient);
             if (success == true)
             {
-                _patientService.sendMessage(patient.id);
+                _patientService.sendMessage("patient " + patient.id + " added to the DB");
             }
              
         }

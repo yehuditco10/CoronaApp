@@ -73,7 +73,7 @@ namespace CoronaApp.Services
             return  true;
         }
 
-        public void sendMessage(string id)
+        public void sendMessage(string message)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
@@ -81,7 +81,7 @@ namespace CoronaApp.Services
             {
                 channel.ExchangeDeclare(exchange: "logs", type: ExchangeType.Fanout);
 
-                var message = "patient "+id+" added to the DB";
+               
                 var body = Encoding.UTF8.GetBytes(message);
                 channel.BasicPublish(exchange: "logs",
                                      routingKey: "",
