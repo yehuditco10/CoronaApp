@@ -54,7 +54,7 @@ namespace CoronaApp.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveAsync(Patient patient)
+        public async Task<bool> SaveAsync(Patient patient)
         {
 
             try
@@ -62,12 +62,19 @@ namespace CoronaApp.Services
                 List<Location> locationsToUpdate =await _context.Locations.Where(l => l.patientId == patient.id).ToListAsync();
                 _context.Locations.RemoveRange(locationsToUpdate);
                 await _context.Locations.AddRangeAsync(patient.locations);
-                await _context.SaveChangesAsync();
-                Log.Information("saved locations for patient {pateient}", patient.id);
+               var success= await _context.SaveChangesAsync();
+                if (success == 0)
+                {
+                  Log.Information("saved locations for patient {pateient}", patient.id);
+                    return true;
+                }
+                return false;
             }
-            catch (Exception)
+
+            //?
+            catch (Exception e)
             {
-                throw new Exception("adding failed");
+                return false;
             }
 
 

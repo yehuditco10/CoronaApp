@@ -43,7 +43,7 @@ namespace CoronaApp.Api.Controllers
         [HttpPost]
         public async void Post([FromBody]Patient patient)
         {
-          var x=  User.Claims;
+          
             try
             {
                await _patientService.SaveAsync(patient);
@@ -54,7 +54,7 @@ namespace CoronaApp.Api.Controllers
             }
 
         }
-
+        
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]Patient newPatient)
@@ -89,6 +89,18 @@ namespace CoronaApp.Api.Controllers
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
             return Ok(user);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("add")]
+        public async Task post(Patient patient)
+        {
+            bool success =  _patientService.post(patient);
+            if (success == true)
+            {
+                _patientService.sendMessage(patient.id);
+            }
+             
         }
     }
 }

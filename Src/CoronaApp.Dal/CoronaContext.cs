@@ -16,15 +16,15 @@ namespace CoronaApp.Dal
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<LocationSearch> LocationSearches { get; set; }
-       
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        optionsBuilder.UseSqlServer("Data Source = DESKTOP-1HT6NS2; Initial Catalog = Corona_DB; Integrated Security = True");
-        //        base.OnConfiguring(optionsBuilder);
-        //    }
-        //}
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Data Source = DESKTOP-1HT6NS2; Initial Catalog = Corona_DB; Integrated Security = True");
+                base.OnConfiguring(optionsBuilder);
+            }
+        }
         public CoronaContext(DbContextOptions<CoronaContext> options)
      : base(options)
         { }

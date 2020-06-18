@@ -1,6 +1,7 @@
 ﻿using CoronaApp.Services.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -32,7 +33,7 @@ namespace CoronaApp.Services
 
         public async Task SaveAsync(Patient patient)
         {
-            await _patientRepository.SaveAsync(patient);
+           bool success= await _patientRepository.SaveAsync(patient);
         }
 
         public async Task<Patient> AuthenticateAsync(string userName, string password)
@@ -65,6 +66,29 @@ namespace CoronaApp.Services
             await _patientRepository.AddAsync(newPatient);
             var patient = await AuthenticateAsync(newPatient.name, newPatient.password);
             return patient;
+        }
+
+        public bool post(Patient patient)
+        {
+            return  true;
+        }
+
+        public void sendMessage(string id)
+        {
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.ExchangeDeclare(exchange: "logs", type: ExchangeType.Fanout);
+
+                var message = "patient "+id+" added to the DB";
+                var body = Encoding.UTF8.GetBytes(message);
+                channel.BasicPublish(exchange: "logs",
+                                     routingKey: "",
+                                     basicProperties: null,
+                                     body: body);
+              
+            }
         }
     }
 }

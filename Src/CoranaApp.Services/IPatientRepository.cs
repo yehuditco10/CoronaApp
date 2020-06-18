@@ -10,7 +10,7 @@ namespace CoronaApp.Services
     {
         Task<Patient> GetAsync(string id);
 
-        Task SaveAsync(Patient patient);
+        Task<bool> SaveAsync(Patient patient);
         Task<Patient> IsValidAsync(string userName, string password);
         Task AddAsync(Patient newPatient);
 
