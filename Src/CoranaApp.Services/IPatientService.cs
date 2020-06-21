@@ -16,5 +16,6 @@ namespace CoronaApp.Services
         Task<Patient> RegisterAsync(Patient newPatient);
         bool post(Patient patient);
         void sendMessage(string id);
+        Task InvokeCommandCreateUser(string id);
     }
 }

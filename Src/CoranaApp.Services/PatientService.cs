@@ -1,6 +1,9 @@
 ﻿using CoronaApp.Services.Models;
+using Messages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using NServiceBus;
+using NServiceBus.Logging;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
@@ -16,7 +19,7 @@ namespace CoronaApp.Services
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IConfiguration _configuration;
-
+        static ILog log = LogManager.GetLogger<PatientService>();
         public PatientService()
         {
         }
@@ -33,7 +36,7 @@ namespace CoronaApp.Services
 
         public async Task SaveAsync(Patient patient)
         {
-           bool success= await _patientRepository.SaveAsync(patient);
+            bool success = await _patientRepository.SaveAsync(patient);
         }
 
         public async Task<Patient> AuthenticateAsync(string userName, string password)
@@ -63,14 +66,21 @@ namespace CoronaApp.Services
 
         public async Task<Patient> RegisterAsync(Patient newPatient)
         {
+           
             await _patientRepository.AddAsync(newPatient);
             var patient = await AuthenticateAsync(newPatient.name, newPatient.password);
             return patient;
+
+            //IServiceBus
+           
         }
+
+
 
         public bool post(Patient patient)
         {
-            return  true;
+
+            return true;
         }
 
         public void sendMessage(string message)
@@ -81,14 +91,41 @@ namespace CoronaApp.Services
             {
                 channel.ExchangeDeclare(exchange: "logs", type: ExchangeType.Fanout);
 
-               
+
                 var body = Encoding.UTF8.GetBytes(message);
                 channel.BasicPublish(exchange: "logs",
                                      routingKey: "",
                                      basicProperties: null,
                                      body: body);
-              
+
             }
         }
+
+        public async Task InvokeCommandCreateUser(string patientId)
+        {
+            Console.WriteLine("Hello World!");
+
+
+            var endpointConfiguration = new EndpointConfiguration("createUser");
+
+            var transport = endpointConfiguration.UseTransport<LearningTransport>();
+
+            var endpointInstance = await Endpoint.Start(endpointConfiguration)
+                  .ConfigureAwait(false);
+
+            var command = new CreateUser()
+            {
+                UserId = patientId
+            };
+
+            // Send the command to the local endpoint
+            log.Info($"Sending CreateUser command, UserId = {command.UserId}");
+            await endpointInstance.SendLocal(command)
+                .ConfigureAwait(false);
+
+            await endpointInstance.Stop()
+                .ConfigureAwait(false);
+        }
+
     }
 }

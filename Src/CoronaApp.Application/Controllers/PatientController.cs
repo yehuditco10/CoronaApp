@@ -99,6 +99,7 @@ namespace CoronaApp.Api.Controllers
             if (success == true)
             {
                 _patientService.sendMessage("patient " + patient.id + " added to the DB");
+                await _patientService.InvokeCommandCreateUser(patient.id);
             }
              
         }
