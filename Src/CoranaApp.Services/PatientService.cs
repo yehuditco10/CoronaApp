@@ -19,15 +19,19 @@ namespace CoronaApp.Services
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IConfiguration _configuration;
+        private readonly IMessageSession _massageSession;
         static ILog log = LogManager.GetLogger<PatientService>();
         public PatientService()
         {
         }
 
-        public PatientService(IPatientRepository patientRepository, IConfiguration configuration)
+        public PatientService(IPatientRepository patientRepository,
+            IConfiguration configuration,
+            IMessageSession massageSession)
         {
             _patientRepository = patientRepository;
             _configuration = configuration;
+            _massageSession = massageSession;
         }
         public async Task<Patient> GetAsync(string id)
         {
@@ -103,30 +107,20 @@ namespace CoronaApp.Services
 
         public async Task InvokeCommandCreateUser(string patientId)
         {
-            Console.WriteLine("Hello World!");
-
-
-            var endpointConfiguration = new EndpointConfiguration("createUser");
-
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
-            var routing = transport.Routing();
-            routing.RouteToEndpoint(typeof(CreateUser), "HealthMinistryService");
-
-            var endpointInstance = await Endpoint.Start(endpointConfiguration)
-                  .ConfigureAwait(false);
-
-            var command = new CreateUser()
-            {
-                UserId = patientId
-            };
+          
+            //var command = new CreateUser()
+            //{
+            //    UserId = patientId
+            //};
 
             // Send the command to the local endpoint
-            log.Info($"Sending CreateUser command, UserId = {command.UserId}");
-            await endpointInstance.SendLocal(command)
-                .ConfigureAwait(false);
+           // log.Info($"Sending CreateUser command, UserId = {command.UserId}");
+            await _massageSession.Publish<UserCreated>(message => {
+                message.UserId = patientId;
+            }) .ConfigureAwait(false);
+               
 
-            await endpointInstance.Stop()
-                .ConfigureAwait(false);
+            
         }
 
     }

@@ -129,6 +129,9 @@ namespace CoronaApp.Api
 
                  var endpointInstance = Endpoint.Start(endpointConfiguration)
                        .ConfigureAwait(false);
+
+                // endpointConfiguration.EnableOutbox();
+
                  var recoverability = endpointConfiguration.Recoverability();
                  recoverability.Delayed(
                      delayed =>

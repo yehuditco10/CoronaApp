@@ -15,7 +15,7 @@ namespace CoronaApp.Services
 
         public Task Handle(CreateUser message, IMessageHandlerContext context)
         {
-            log.Info($"Received PlaceOrder, OrderId = {message.UserId}");
+            log.Info($"send PlaceOrder, OrderId = {message.UserId}");
 
             // This is normally where some business logic would occur
 
