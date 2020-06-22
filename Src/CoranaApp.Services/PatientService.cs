@@ -66,13 +66,13 @@ namespace CoronaApp.Services
 
         public async Task<Patient> RegisterAsync(Patient newPatient)
         {
-           
+
             await _patientRepository.AddAsync(newPatient);
             var patient = await AuthenticateAsync(newPatient.name, newPatient.password);
             return patient;
 
             //IServiceBus
-           
+
         }
 
 
@@ -109,6 +109,8 @@ namespace CoronaApp.Services
             var endpointConfiguration = new EndpointConfiguration("createUser");
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
+            var routing = transport.Routing();
+            routing.RouteToEndpoint(typeof(CreateUser), "HealthMinistryService");
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                   .ConfigureAwait(false);

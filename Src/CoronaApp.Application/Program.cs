@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Messages;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NServiceBus;
+using NServiceBus.Hosting;
 using Serilog;
 using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 
@@ -22,7 +26,7 @@ namespace CoronaApp.Api
        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
        .Build();
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
            .ReadFrom.Configuration(Configuration)
@@ -32,7 +36,10 @@ namespace CoronaApp.Api
             {
                 // Log.Information("Getting the motors running...");
 
-                BuildWebHost(args).Run();
+                //BuildWebHost(args).Run();
+                CreateHostBuilder(args)
+                      .Build()
+                      .Run();
             }
             catch (Exception ex)
             {
@@ -60,21 +67,100 @@ namespace CoronaApp.Api
             //    Console.WriteLine(msg);
             //});
 
+
+
         }
-        public static IWebHost BuildWebHost(string[] args) =>
-      WebHost.CreateDefaultBuilder(args)
-             .UseStartup<Startup>()
-             .UseConfiguration(Configuration)
-             .UseSerilog()
-             .Build();
- 
-        //public static IHostBuilder CreateHostBuilder(string[] args) =>
-        //    Host.CreateDefaultBuilder(args)
-        //        .ConfigureWebHostDefaults(webBuilder =>
-        //        {
-        //            webBuilder.UseStartup<Startup>()
-        //            .UseConfiguration(Configuration)
-        //            .UseSerilog();
-        //        });
+        //public static IWebHost BuildWebHost(string[] args) =>
+        // WebHost.CreateDefaultBuilder(args)
+
+        //     .UseNServiceBus(hostBuilderContext =>
+        //     {
+        //         var endpointConfiguration = new EndpointConfiguration("createUser");
+
+        //         var transport = endpointConfiguration.UseTransport<LearningTransport>();
+
+        //         var routing = transport.Routing();
+        //         routing.RouteToEndpoint(typeof(CreateUser), "HealthMinistryService");
+
+        //         var endpointInstance = await Endpoint.Start(endpointConfiguration)
+        //               .ConfigureAwait(false);
+        //         var recoverability = endpointConfiguration.Recoverability();
+        //         recoverability.Delayed(
+        //             delayed =>
+        //             {
+        //                 delayed.NumberOfRetries(2);
+        //                 delayed.TimeIncrease(TimeSpan.FromMinutes(5));
+        //             });
+        //         recoverability.Immediate(
+        //             immediate =>
+        //             {
+        //                 immediate.NumberOfRetries(3);
+        //             });
+        //         //persistence
+        //         var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+        //         var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Corona_DB; Integrated Security = True";
+        //         var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+        //         var subscriptions = persistence.SubscriptionSettings();
+        //         subscriptions.CacheFor(TimeSpan.FromMinutes(1));
+        //         persistence.SqlDialect<SqlDialect.MsSqlServer>();
+        //         persistence.ConnectionBuilder(
+        //             connectionBuilder: () =>
+        //             {
+        //                 return new SqlConnection(connection);
+        //             });
+
+        //         return endpointConfiguration;
+        //     })
+        //     .UseStartup<Startup>()
+        //     .UseConfiguration(Configuration)
+        //     .UseSerilog()
+        //     .Build();
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            .UseNServiceBus(hostBuilderContext =>
+             {
+                 var endpointConfiguration = new EndpointConfiguration("createUser");
+
+                 var transport = endpointConfiguration.UseTransport<LearningTransport>();
+
+                 var routing = transport.Routing();
+                 routing.RouteToEndpoint(typeof(CreateUser), "HealthMinistryService");
+
+                 var endpointInstance = Endpoint.Start(endpointConfiguration)
+                       .ConfigureAwait(false);
+                 var recoverability = endpointConfiguration.Recoverability();
+                 recoverability.Delayed(
+                     delayed =>
+                     {
+                         delayed.NumberOfRetries(2);
+                         delayed.TimeIncrease(TimeSpan.FromMinutes(5));
+                     });
+                 recoverability.Immediate(
+                     immediate =>
+                     {
+                         immediate.NumberOfRetries(3);
+                     });
+                 //persistence
+                 var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Corona_DB; Integrated Security = True";
+                 var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+                 var subscriptions = persistence.SubscriptionSettings();
+                 subscriptions.CacheFor(TimeSpan.FromMinutes(1));
+                 persistence.SqlDialect<SqlDialect.MsSqlServer>();
+                 persistence.ConnectionBuilder(
+                     connectionBuilder: () =>
+                     {
+                         return new SqlConnection(connection);
+                     });
+
+                 return endpointConfiguration;
+             })
+            .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>()
+                      .UseConfiguration(Configuration)
+                      .UseSerilog();
+
+                });
     }
 }
