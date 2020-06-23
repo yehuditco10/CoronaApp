@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Messages;
 using Microsoft.AspNetCore;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
 using NServiceBus.Hosting;
+using NServiceBus.Logging;
 using Serilog;
 using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 
@@ -70,6 +72,7 @@ namespace CoronaApp.Api
 
 
         }
+
         //public static IWebHost BuildWebHost(string[] args) =>
         // WebHost.CreateDefaultBuilder(args)
 
@@ -118,46 +121,56 @@ namespace CoronaApp.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-            .UseNServiceBus(hostBuilderContext =>
-             {
-                 var endpointConfiguration = new EndpointConfiguration("createUser");
+            //.UseNServiceBus(async  hostBuilderContext =>
+            // {
+            //     var endpointConfiguration = new EndpointConfiguration("createUser");
 
-                 var transport = endpointConfiguration.UseTransport<LearningTransport>();
+            //     var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox_DB; Integrated Security = True";
+            //     var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+            //     var subscriptions = persistence.SubscriptionSettings();
+            //     subscriptions.CacheFor(TimeSpan.FromMinutes(1));
+            //     persistence.SqlDialect<SqlDialect.MsSqlServer>();
+            //     persistence.ConnectionBuilder(
+            //         connectionBuilder: () =>
+            //         {
+            //             return new SqlConnection(connection);
+            //         });
 
-                 var routing = transport.Routing();
-                 routing.RouteToEndpoint(typeof(CreateUser), "HealthMinistryService");
 
-                 var endpointInstance = Endpoint.Start(endpointConfiguration)
-                       .ConfigureAwait(false);
+            //     //RabitMQ
+            //     var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+            //     transport.UseConventionalRoutingTopology();
+            //     transport.ConnectionString("host= localhost:5672;username=guest;password=guest");
+            //     endpointConfiguration.EnableInstallers();
+            //     endpointConfiguration.EnableOutbox();
 
-                // endpointConfiguration.EnableOutbox();
+            //     var routing = transport.Routing();
+            //     routing.RouteToEndpoint(
+            //     assembly: typeof(CreateUser).Assembly,
+            //     destination: "HealthMinistry_Service");
 
-                 var recoverability = endpointConfiguration.Recoverability();
-                 recoverability.Delayed(
-                     delayed =>
-                     {
-                         delayed.NumberOfRetries(2);
-                         delayed.TimeIncrease(TimeSpan.FromMinutes(5));
-                     });
-                 recoverability.Immediate(
-                     immediate =>
-                     {
-                         immediate.NumberOfRetries(3);
-                     });
-                 //persistence
-                 var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Corona_DB; Integrated Security = True";
-                 var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-                 var subscriptions = persistence.SubscriptionSettings();
-                 subscriptions.CacheFor(TimeSpan.FromMinutes(1));
-                 persistence.SqlDialect<SqlDialect.MsSqlServer>();
-                 persistence.ConnectionBuilder(
-                     connectionBuilder: () =>
-                     {
-                         return new SqlConnection(connection);
-                     });
 
-                 return endpointConfiguration;
-             })
+
+            //     var endpointInstance =await Endpoint.Start(endpointConfiguration)
+            //           .ConfigureAwait(false);
+
+            //     var command = new CreateUser
+            //     {
+            //         UserId = Guid.NewGuid().ToString()
+            //     };
+
+            //     // Send the command
+            //     log.Info($"Sending PlaceOrder command, OrderId = {command.UserId}");
+            //   await endpointInstance.Send(command)
+            //        .ConfigureAwait(false);
+            //     //RunLoop(endpointInstance)
+            //     //    .ConfigureAwait(false);
+
+            //     //endpointInstance.Stop()
+            //     //   .ConfigureAwait(false);
+            //     // return endpointConfiguration;
+            //     return Task.CompletedTask;
+            // })
             .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
@@ -165,5 +178,8 @@ namespace CoronaApp.Api
                       .UseSerilog();
 
                 });
+
+
+     
     }
 }

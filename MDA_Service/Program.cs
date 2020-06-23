@@ -4,13 +4,15 @@ using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace HealthMinistry_Service
+namespace MDA_Service
 {
     class Program
     {
         static async Task Main()
         {
-            var endpointConfiguration = new EndpointConfiguration("HealthMinistry_Service");
+            Console.Title = "MDA_Service";
+
+            var endpointConfiguration = new EndpointConfiguration("MDA_Service");
             endpointConfiguration.EnableOutbox();
             var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox_DB; Integrated Security = True";
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
@@ -31,7 +33,7 @@ namespace HealthMinistry_Service
 
             //var routing = transport.Routing();
             //routing.RouteToEndpoint(
-            //assembly: typeof(UserCreated).Assembly,
+            //assembly: typeof(OrderPlaced).Assembly,
             //destination: "Billing");
 
             //assemblyScaner
