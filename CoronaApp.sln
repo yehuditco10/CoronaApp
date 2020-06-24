@@ -24,9 +24,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messages", "Messages\Messag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthMinistry_Service", "HealthMinistry_Service\HealthMinistry_Service.csproj", "{9163F5F2-0B11-49E6-ABD7-6BD630A95F06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insulator", "Insulator\Insulator.csproj", "{26E385D7-AF30-432F-9CF0-419E7E1F8EF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Insulator", "Insulator\Insulator.csproj", "{26E385D7-AF30-432F-9CF0-419E7E1F8EF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDA_Service", "MDA_Service\MDA_Service.csproj", "{7147E691-8247-404F-8234-8C5F393E56D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDA_Service", "MDA_Service\MDA_Service.csproj", "{7147E691-8247-404F-8234-8C5F393E56D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,7 +76,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{10A522D9-CB2F-48FC-B1FC-A0E88D12D3A6} = {0AF6CC86-9CE6-4543-897D-03C77399A44A}
-		{7147E691-8247-404F-8234-8C5F393E56D6} = {8FCDB16C-E1E1-4DE0-96A2-1C3CE1BD8CAE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {82A6F397-8691-4EC9-B189-48EDF541AFA3}

@@ -39,7 +39,7 @@ namespace Insulator
 
             var routing = transport.Routing();
             routing.RouteToEndpoint(
-            assembly: typeof(CreateUser).Assembly,
+            assembly: typeof(UserCreated).Assembly,
             destination: "MDA_Service");
 
 
@@ -61,7 +61,7 @@ namespace Insulator
         {
             while (true)
             {
-                log.Info("Press 'id' to create a new user, or 'Q' to quit.");
+                log.Info("Press 'P' to create a new user, or 'Q' to quit.");
                 var key = Console.ReadKey();
                 Console.WriteLine();
 
@@ -69,14 +69,14 @@ namespace Insulator
                 {
                     case ConsoleKey.P:
                         // Instantiate the command
-                        var command = new CreateUser
+                        var createUserEvent = new UserCreated
                         {
                             UserId = Guid.NewGuid().ToString()
                         };
 
                         // Send the command
-                        log.Info($"Sending CreateUser command, UserId = {command.UserId}");
-                        await endpointInstance.Send(command)
+                        log.Info($"Published a new user, UserId = {createUserEvent.UserId}");
+                        await endpointInstance.Publish(createUserEvent)
                             .ConfigureAwait(false);
 
                         break;

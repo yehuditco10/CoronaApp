@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 namespace CoronaApp.Services
 {
    
-    class CreateUserHandler : IHandleMessages<CreateUser>
+    class UserCreatedHandler : IHandleMessages<UserCreated>
     {
-        static ILog log = LogManager.GetLogger<CreateUserHandler>();
+        static ILog log = LogManager.GetLogger<UserCreated>();
 
-        public Task Handle(CreateUser message, IMessageHandlerContext context)
+        public Task Handle(UserCreated message, IMessageHandlerContext context)
         {
             log.Info($"send PlaceOrder, OrderId = {message.UserId}");
 
