@@ -26,11 +26,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Insulator", "Insulator\Insu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDA_Service", "MDA_Service\MDA_Service.csproj", "{7147E691-8247-404F-8234-8C5F393E56D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hatzala_Service", "Hatzala_Service\Hatzala_Service.csproj", "{7A34B7CB-3193-4860-9D26-EE328634BF05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hatzala_Service", "Hatzala_Service\Hatzala_Service.csproj", "{7A34B7CB-3193-4860-9D26-EE328634BF05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthMinistry_Service", "HealthMinistry_Service\HealthMinistry_Service.csproj", "{7F2645F3-44E8-48BC-90A5-736E4893884B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthMinistry_Service", "HealthMinistry_Service\HealthMinistry_Service.csproj", "{7F2645F3-44E8-48BC-90A5-736E4893884B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fines_Service", "Fines_Service\Fines_Service.csproj", "{8285B1FC-913F-4128-9C67-7CBF6C703BB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fines_Service", "Fines_Service\Fines_Service.csproj", "{8285B1FC-913F-4128-9C67-7CBF6C703BB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
