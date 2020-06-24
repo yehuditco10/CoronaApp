@@ -15,7 +15,8 @@ namespace MDA_Service
         public Task Handle(UserCreated message, IMessageHandlerContext context)
         {
             log.Info($"Received UserCreated, UserId = {message.UserId} ...");
-
+            if (message.UserId.Contains("t"))
+                throw new Exception("do you see me??????????");
             return Task.CompletedTask;
         }
 

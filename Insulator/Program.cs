@@ -18,7 +18,7 @@ namespace Insulator
             var endpointConfiguration = new EndpointConfiguration("Insulator");
 
             //persistence
-            var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox_DB; Integrated Security = True";
+            var connection = @"Data Source = ILBHARTMANLT; Initial Catalog = Outbox_DB; Integrated Security = True";
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
             var subscriptions = persistence.SubscriptionSettings();
             subscriptions.CacheFor(TimeSpan.FromMinutes(1));
@@ -36,6 +36,7 @@ namespace Insulator
             transport.ConnectionString("host= localhost:5672;username=guest;password=guest");
             endpointConfiguration.EnableInstallers();
             endpointConfiguration.EnableOutbox();
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             var routing = transport.Routing();
             routing.RouteToEndpoint(
