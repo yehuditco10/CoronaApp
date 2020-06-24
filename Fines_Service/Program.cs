@@ -1,17 +1,17 @@
-﻿using System;
+﻿using NServiceBus;
+using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using NServiceBus;
 
-namespace HealthMinistry_Service
+namespace Fines_Service
 {
     class Program
     {
         static async Task Main()
         {
-            Console.Title = "HealthMinistry";
+            Console.Title = "Fines";
 
-            var endpointConfiguration = new EndpointConfiguration("HealthMinistry");
+            var endpointConfiguration = new EndpointConfiguration("Fines");
 
             endpointConfiguration.EnableOutbox();
             var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox_DB; Integrated Security = True";

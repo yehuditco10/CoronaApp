@@ -3,6 +3,7 @@ using Messages;
 using NServiceBus;
 using NServiceBus.Logging;
 using System;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace Insulator
             var endpointConfiguration = new EndpointConfiguration("Insulator");
 
             //persistence
-            var connection = @"Data Source = ILBHARTMANLT; Initial Catalog = Outbox_DB; Integrated Security = True";
+            var connection = ConfigurationManager.AppSettings["Outbox_DBConnection"];
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
             var subscriptions = persistence.SubscriptionSettings();
             subscriptions.CacheFor(TimeSpan.FromMinutes(1));
@@ -37,11 +38,10 @@ namespace Insulator
             endpointConfiguration.EnableInstallers();
             endpointConfiguration.EnableOutbox();
             endpointConfiguration.AuditProcessedMessagesTo("audit");
-
-            var routing = transport.Routing();
-            routing.RouteToEndpoint(
-            assembly: typeof(UserCreated).Assembly,
-            destination: "MDA_Service");
+            //var routing = transport.Routing();
+            //routing.RouteToEndpoint(
+            //assembly: typeof(UserCreated).Assembly,
+            //destination: "HealthMinistry");
 
 
 

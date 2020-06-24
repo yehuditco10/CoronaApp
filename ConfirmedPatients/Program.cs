@@ -2,15 +2,15 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Consumer
+namespace Shipping
 {
     class Program
     {
         static async Task Main()
         {
-            Console.Title = "HealthMinistryService";
+            Console.Title = "Shipping";
 
-            var endpointConfiguration = new EndpointConfiguration("HealthMinistryService");
+            var endpointConfiguration = new EndpointConfiguration("Shipping");
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
 

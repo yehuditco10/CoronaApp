@@ -9,16 +9,20 @@ using System.Threading.Tasks;
 
 namespace MDA_Service
 {
-    class UserCreatedHandler : IHandleMessages<UserCreated>
+   public class UserCreatedHandler : IHandleMessages<UserCreated>
     {
         static ILog log = LogManager.GetLogger<UserCreatedHandler>();
         public Task Handle(UserCreated message, IMessageHandlerContext context)
         {
-            log.Info($"Received UserCreated, UserId = {message.UserId} ...");
-            if (message.UserId.Contains("t"))
-                throw new Exception("do you see me??????????");
-            return Task.CompletedTask;
-        }
+            log.Info($"Received userTested, UserId = {message.UserId} ...");
 
+            var userTested = new UserTested
+            {
+                UserId = message.UserId,
+                IsPositive = true
+            };
+            return context.Publish(userTested);
+            
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Messages;
 using NServiceBus;
 using System;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -14,7 +15,8 @@ namespace MDA_Service
 
             var endpointConfiguration = new EndpointConfiguration("MDA_Service");
             endpointConfiguration.EnableOutbox();
-            var connection = @"Data Source = ILBHARTMANLT; Initial Catalog = Outbox_DB; Integrated Security = True";
+            //string connection = "Data Source = ILBHARTMANLT; Initial Catalog = Corona_DB; Integrated Security = True";
+            string connection = ConfigurationManager.AppSettings["Outbox_DBConnection"];
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
             var subscriptions = persistence.SubscriptionSettings();
             subscriptions.CacheFor(TimeSpan.FromMinutes(1));
@@ -42,7 +44,8 @@ namespace MDA_Service
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                .ConfigureAwait(false);
-
+            // Instantiate the command
+          
 
             Console.WriteLine("Press Enter to exit.");
             Console.ReadLine();
