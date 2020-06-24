@@ -36,11 +36,11 @@ namespace Insulator
             transport.ConnectionString("host= localhost:5672;username=guest;password=guest");
             endpointConfiguration.EnableInstallers();
             endpointConfiguration.EnableOutbox();
-
-            var routing = transport.Routing();
-            routing.RouteToEndpoint(
-            assembly: typeof(UserCreated).Assembly,
-            destination: "MDA_Service");
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
+            //var routing = transport.Routing();
+            //routing.RouteToEndpoint(
+            //assembly: typeof(UserCreated).Assembly,
+            //destination: "HealthMinistry");
 
 
 

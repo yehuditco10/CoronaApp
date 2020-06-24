@@ -29,7 +29,7 @@ namespace MDA_Service
             transport.UseConventionalRoutingTopology();
             transport.ConnectionString("host= localhost:5672;username=guest;password=guest");
             endpointConfiguration.EnableInstallers();
-
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             //var routing = transport.Routing();
             //routing.RouteToEndpoint(
@@ -42,7 +42,8 @@ namespace MDA_Service
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                .ConfigureAwait(false);
-
+            // Instantiate the command
+          
 
             Console.WriteLine("Press Enter to exit.");
             Console.ReadLine();
