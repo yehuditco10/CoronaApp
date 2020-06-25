@@ -30,6 +30,10 @@ namespace Fines_Service
             transport.ConnectionString("host= localhost:5672;username=guest;password=guest");
             endpointConfiguration.EnableInstallers();
             endpointConfiguration.AuditProcessedMessagesTo("audit");
+            endpointConfiguration.AuditSagaStateChanges(
+    serviceControlQueue: "Particular.Coronaservicecontrol");
+
+
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                 .ConfigureAwait(false);
 

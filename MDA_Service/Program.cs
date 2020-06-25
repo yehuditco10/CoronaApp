@@ -18,7 +18,6 @@ namespace MDA_Service
             //string connection = "Data Source = ILBHARTMANLT; Initial Catalog = Corona_DB; Integrated Security = True";
             string connection = ConfigurationManager.AppSettings["Outbox_DBConnection"];
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-            //מהמדריך של יום חמישיvar persistence = endpointConfiguration.UsePersistence<LearningPersistence>();
             var subscriptions = persistence.SubscriptionSettings();
             subscriptions.CacheFor(TimeSpan.FromMinutes(1));
             persistence.SqlDialect<SqlDialect.MsSqlServer>();

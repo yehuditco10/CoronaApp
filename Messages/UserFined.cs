@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Messages
 {
-  public class UserFined:IEvent
+    public class UserFined : ICommand
     {
-
+        public string UserId { get; set; }
+        public int Sum { get; set; }
     }
 }
