@@ -101,7 +101,7 @@ namespace CoronaApp.Api
         //             });
         //         //persistence
         //         var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-        //         var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Corona_DB; Integrated Security = True";
+        //         var connection = @"Data Source = ILBHARTMANLT; Initial Catalog = Corona_DB; Integrated Security = True";
         //         var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
         //         var subscriptions = persistence.SubscriptionSettings();
         //         subscriptions.CacheFor(TimeSpan.FromMinutes(1));
@@ -125,7 +125,7 @@ namespace CoronaApp.Api
             // {
             //     var endpointConfiguration = new EndpointConfiguration("createUser");
 
-            //     var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox_DB; Integrated Security = True";
+            //     var connection = @"Data Source = ILBHARTMANLT; Initial Catalog = Outbox_DB; Integrated Security = True";
             //     var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
             //     var subscriptions = persistence.SubscriptionSettings();
             //     subscriptions.CacheFor(TimeSpan.FromMinutes(1));

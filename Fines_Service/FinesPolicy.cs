@@ -22,7 +22,6 @@ namespace Fines_Service
             //log.Info($"Received UserTested, IsPositive = {message.IsPositive} ");
             return Task.CompletedTask;
         }
-
         public Task Handle(UserViolations message, IMessageHandlerContext context)
         {
             log.Info($"UserViolations message received.");
@@ -30,9 +29,6 @@ namespace Fines_Service
             //log.Info($"Received UserViolations, Number of violations = {message.Violations} ");
             return Task.CompletedTask;
         }
-
-      
-
         protected override void ConfigureHowToFindSaga(SagaPropertyMapper<FinesPolicyData> mapper)
         {
             mapper.ConfigureMapping<UserTested>(message => message.UserId)
