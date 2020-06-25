@@ -40,5 +40,16 @@ namespace Fines_Service
             mapper.ConfigureMapping<UserViolations>(message => message.UserId)
                 .ToSaga(sagaData => sagaData.UserId);
         }
+        //private async Task ProcessFine(IMessageHandlerContext context)
+        //{
+        //    if (Data.IsUserTested && Data.IsUserTested)
+        //    {
+        //        await context.SendLocal(new UserFined() { 
+        //        UserId=Data.UserId,
+        //        Sum=500
+        //       });
+        //        MarkAsComplete();
+        //    }
+        //}
     }
 }

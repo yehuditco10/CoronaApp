@@ -14,7 +14,7 @@ namespace HealthMinistry_Service
             var endpointConfiguration = new EndpointConfiguration("HealthMinistry");
 
             endpointConfiguration.EnableOutbox();
-            var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox_DB; Integrated Security = True";
+            var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox; Integrated Security = True";
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
             var subscriptions = persistence.SubscriptionSettings();
             subscriptions.CacheFor(TimeSpan.FromMinutes(1));

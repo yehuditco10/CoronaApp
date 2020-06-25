@@ -14,7 +14,7 @@ namespace Fines_Service
             var endpointConfiguration = new EndpointConfiguration("Fines");
 
             endpointConfiguration.EnableOutbox();
-            var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox_DB; Integrated Security = True";
+            var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox; Integrated Security = True";
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
             var subscriptions = persistence.SubscriptionSettings();
             subscriptions.CacheFor(TimeSpan.FromMinutes(1));
@@ -30,6 +30,10 @@ namespace Fines_Service
             transport.ConnectionString("host= localhost:5672;username=guest;password=guest");
             endpointConfiguration.EnableInstallers();
             endpointConfiguration.AuditProcessedMessagesTo("audit");
+            endpointConfiguration.AuditSagaStateChanges(
+    serviceControlQueue: "Particular.Coronaservicecontrol");
+
+
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                 .ConfigureAwait(false);
 

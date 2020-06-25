@@ -18,7 +18,7 @@ namespace Insulator
             var endpointConfiguration = new EndpointConfiguration("Insulator");
 
             //persistence
-            var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox_DB; Integrated Security = True";
+            var connection = @"Data Source = DESKTOP-1HT6NS2; Initial Catalog = Outbox; Integrated Security = True";
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
             var subscriptions = persistence.SubscriptionSettings();
             subscriptions.CacheFor(TimeSpan.FromMinutes(1));
@@ -62,16 +62,16 @@ namespace Insulator
             while (true)
             {
                 log.Info("Press 'P' to create a new user, or 'Q' to quit.");
-                var key = Console.ReadKey();
+                var key = Console.ReadLine();
                 Console.WriteLine();
 
-                switch (key.Key)
-                {
-                    case ConsoleKey.P:
+                
                         // Instantiate the command
                         var createUserEvent = new UserCreated
                         {
-                            UserId = Guid.NewGuid().ToString()
+                            //  UserId = Guid.NewGuid().ToString()
+                            UserId ="123"
+
                         };
 
                         // Send the command
@@ -79,15 +79,7 @@ namespace Insulator
                         await endpointInstance.Publish(createUserEvent)
                             .ConfigureAwait(false);
 
-                        break;
-
-                    case ConsoleKey.Q:
-                        return;
-
-                    default:
-                        log.Info("Unknown input. Please try again.");
-                        break;
-                }
+               
             }
         }
     }
