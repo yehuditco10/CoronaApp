@@ -1,5 +1,6 @@
 ﻿using Messages;
 using NServiceBus;
+using NServiceBus.Persistence;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -16,17 +17,19 @@ namespace MDA_Service
             var endpointConfiguration = new EndpointConfiguration("MDA_Service");
             endpointConfiguration.EnableOutbox();
             //string connection = "Data Source = ILBHARTMANLT; Initial Catalog = Corona_DB; Integrated Security = True";
-            string connection = ConfigurationManager.AppSettings["Outbox_DBConnection"];
-            var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-            var subscriptions = persistence.SubscriptionSettings();
-            subscriptions.CacheFor(TimeSpan.FromMinutes(1));
-            persistence.SqlDialect<SqlDialect.MsSqlServer>();
-            persistence.ConnectionBuilder(
-                connectionBuilder: () =>
-                {
-                    return new SqlConnection(connection);
-                });
-
+            //string connection = ConfigurationManager.AppSettings["Outbox_DBConnection"];
+            //var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+            //var subscriptions = persistence.SubscriptionSettings();
+            //subscriptions.CacheFor(TimeSpan.FromMinutes(1));
+            //persistence.SqlDialect<SqlDialect.MsSqlServer>();
+            //persistence.ConnectionBuilder(
+            //    connectionBuilder: () =>
+            //    {
+            //        return new SqlConnection(connection);
+            //    });
+            var connection = ConfigurationManager.AppSettings["Outbox_DBConnection"];
+            var persistence = endpointConfiguration.UsePersistence<NHibernatePersistence>();
+            persistence.ConnectionString(connection);
             var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
             transport.UseConventionalRoutingTopology();
             transport.ConnectionString("host= localhost:5672;username=guest;password=guest");

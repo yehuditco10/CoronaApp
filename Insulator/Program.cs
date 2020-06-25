@@ -2,6 +2,7 @@
 using Messages;
 using NServiceBus;
 using NServiceBus.Logging;
+using NServiceBus.Persistence;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -20,15 +21,16 @@ namespace Insulator
 
             //persistence
             var connection = ConfigurationManager.AppSettings["Outbox_DBConnection"];
-            var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-            var subscriptions = persistence.SubscriptionSettings();
-            subscriptions.CacheFor(TimeSpan.FromMinutes(1));
-            persistence.SqlDialect<SqlDialect.MsSqlServer>();
-            persistence.ConnectionBuilder(
-                connectionBuilder: () =>
-                {
-                    return new SqlConnection(connection);
-                });
+            var persistence = endpointConfiguration.UsePersistence<NHibernatePersistence>();
+            persistence.ConnectionString(connection);
+            //var subscriptions = persistence.SubscriptionSettings();
+            //subscriptions.CacheFor(TimeSpan.FromMinutes(1));
+            //persistence.SqlDialect<SqlDialect.MsSqlServer>();
+            //persistence.ConnectionBuilder(
+            //    connectionBuilder: () =>
+            //    {
+            //        return new SqlConnection(connection);
+            //    });
 
 
             //RabitMQ
@@ -38,17 +40,17 @@ namespace Insulator
             endpointConfiguration.EnableInstallers();
             endpointConfiguration.EnableOutbox();
             endpointConfiguration.AuditProcessedMessagesTo("audit");
-            //var routing = transport.Routing();
+            var routing = transport.Routing();
             //routing.RouteToEndpoint(
             //assembly: typeof(UserCreated).Assembly,
             //destination: "HealthMinistry");
-
+            routing.RouteToEndpoint(typeof(TestCanceled), "MDA_Service");
 
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
           .ConfigureAwait(false);
 
-          
+
             await RunLoop(endpointInstance)
                 .ConfigureAwait(false);
 
@@ -60,18 +62,22 @@ namespace Insulator
 
         static async Task RunLoop(IEndpointInstance endpointInstance)
         {
+            var lastUser = string.Empty;
+
             while (true)
             {
-                log.Info("Press 'P' to create a new user, or 'Q' to quit.");
-                var key = Console.ReadLine();
+                log.Info("Press 'P' to place a new user, 'C' to cancel last user, or 'Q' to quit.");
+                var key = Console.ReadKey();
                 Console.WriteLine();
 
-                
+                switch (key.Key)
+                {
+                    case ConsoleKey.P:
                         // Instantiate the command
                         var createUserEvent = new UserCreated
                         {
                             //  UserId = Guid.NewGuid().ToString()
-                            UserId ="123"
+                            UserId = "123"
 
                         };
 
@@ -80,9 +86,29 @@ namespace Insulator
                         await endpointInstance.Publish(createUserEvent)
                             .ConfigureAwait(false);
 
-               
+
+                        lastUser = createUserEvent.UserId; // Store order identifier to cancel if needed.
+                        break;
+
+                    case ConsoleKey.C:
+                        var cancelEvent = new TestCanceled
+                        {
+                            UserId = lastUser
+                        };
+                        await endpointInstance.Send(cancelEvent)
+                            .ConfigureAwait(false);
+                        log.Info($"Sent a correlated message to {cancelEvent.UserId}");
+                        break;
+
+                    case ConsoleKey.Q:
+                        return;
+
+                    default:
+                        log.Info("Unknown input. Please try again.");
+                        break;
+                }
             }
+
         }
     }
-
 }
