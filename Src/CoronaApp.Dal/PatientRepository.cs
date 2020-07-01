@@ -33,16 +33,6 @@ namespace CoronaApp.Services
 
             throw new Exception("no location");
         }
-
-        public async Task<Patient> IsValidAsync(string userName, string password)
-        {
-            //  List<Patient> li = _context.Patients.ToList();
-            Patient patient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.name == userName && p.password == password);
-            if (patient != null)
-                return patient;
-            return null;
-        }
         public async Task AddAsync(Patient newPatient)
         {
             Patient exist = await _context.Patients.FirstOrDefaultAsync(p => p.password == newPatient.password);
@@ -54,13 +44,22 @@ namespace CoronaApp.Services
              _context.Patients.Add(newPatient);
             await _context.SaveChangesAsync();
         }
+        public async Task<Patient> IsValidAsync(string userName, string password)
+        {
+            //  List<Patient> li = _context.Patients.ToList();
+            Patient patient = await _context.Patients.Include(l => l.locations)
+                .FirstOrDefaultAsync(p => p.name == userName && p.password == password);
+            if (patient != null)
+                return patient;
+            return null;
+        }
         public async Task<bool> SaveAsync(Patient patient)
         {
             try
             {
                 List<Location> locationsToUpdate = await _context.Locations.Where(l => l.patientId == patient.id).ToListAsync();
-                _context.Locations.RemoveRange(locationsToUpdate);
-                await _context.Locations.AddRangeAsync(patient.locations);
+                //_context.Locations.RemoveRange(locationsToUpdate);
+                 _context.Locations.AddRange(patient.locations);
                 var success = await _context.SaveChangesAsync();
                 //it was if(success==0), but I think that SaveChangesAsync() return the number of row was effected in db.
                 if (success > 0)
