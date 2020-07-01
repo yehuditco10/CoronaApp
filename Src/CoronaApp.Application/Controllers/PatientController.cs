@@ -15,13 +15,12 @@ namespace CoronaApp.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class PatientController : ControllerBase
     {
         private readonly IPatientService _patientService;
         public PatientController(IPatientService patientService)
         {
-
             _patientService = patientService;
         }
         // GET api/<PatientController>/5
@@ -43,10 +42,9 @@ namespace CoronaApp.Api.Controllers
         [HttpPost]
         public async void Post([FromBody]Patient patient)
         {
-          
             try
             {
-               await _patientService.SaveAsync(patient);
+                await _patientService.SaveAsync(patient);
             }
             catch (Exception e)
             {
@@ -54,17 +52,19 @@ namespace CoronaApp.Api.Controllers
             }
 
         }
-        
+
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]Patient newPatient)
         {
-            var patient = await _patientService.RegisterAsync(newPatient);
-            if (patient == null)
-                return BadRequest(new { message = "Register Failed" });
-            return Ok(patient);
+            if (String.IsNullOrEmpty(newPatient.password) || String.IsNullOrEmpty(newPatient.name))
+                return new UnsupportedMediaTypeResult();
+            var message = await _patientService.RegisterAsync(newPatient);
+            if (message.Contains("succeded"))
+                return Ok(newPatient);
+            return BadRequest(message);
         }
-  
+
         //Async?
         [HttpGet("username")]
         public ActionResult GetUserNameByJWT()
@@ -90,18 +90,16 @@ namespace CoronaApp.Api.Controllers
                 return BadRequest(new { message = "Username or password is incorrect" });
             return Ok(user);
         }
-
-        [AllowAnonymous]
         [HttpPost("add")]
         public async Task post(Patient patient)
         {
-            bool success =  _patientService.post(patient);
+            bool success = _patientService.post(patient);
             if (success == true)
             {
                 _patientService.sendMessage("patient " + patient.id + " added to the DB");
                 await _patientService.InvokeCommandCreateUser(patient.id);
             }
-             
+
         }
     }
 }

@@ -13,7 +13,7 @@ namespace CoronaApp.Services
         Task SaveAsync(Patient patient);
         Task<Patient> AuthenticateAsync(string userName, string password);
 
-        Task<Patient> RegisterAsync(Patient newPatient);
+        Task<string> RegisterAsync(Patient newPatient);
         bool post(Patient patient);
         void sendMessage(string id);
         Task InvokeCommandCreateUser(string id);

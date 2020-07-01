@@ -1,10 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using CoronaApp.Services;
 using CoronaApp.Dal;
 using Microsoft.EntityFrameworkCore;
 using CoronaApp.Services.Models;
@@ -21,51 +18,54 @@ namespace CoronaApp.Services
         }
         public async Task<Patient> GetAsync(string id)
         {
-            Patient patient =await _context.Patients.Include(p => p.locations)
+            Patient patient = await _context.Patients.Include(p => p.locations)
                  .FirstOrDefaultAsync(pa => pa.id == id);
             if (patient == null)
             {
-                Log.Error("Patient {pateient} didn't find", id);
+                Log.Error("Patient {patient} didn't find", id);
                 throw new Exception("didn't find");
             }
             if (patient.locations.Count() > 0)
             {
-                Log.Information("Get locations for patient {pateient}", id);
+                Log.Information("Get locations for patient {patient}", id);
                 return patient;
             }
-           
+
             throw new Exception("no location");
         }
 
         public async Task<Patient> IsValidAsync(string userName, string password)
         {
-          //  List<Patient> li = _context.Patients.ToList();
-            Patient patient =await _context.Patients
+            //  List<Patient> li = _context.Patients.ToList();
+            Patient patient = await _context.Patients
                 .FirstOrDefaultAsync(p => p.name == userName && p.password == password);
             if (patient != null)
                 return patient;
             return null;
         }
-
         public async Task AddAsync(Patient newPatient)
         {
-            //todo validations
-            _context.Patients.Add(newPatient);
+            Patient exist = await _context.Patients.FirstOrDefaultAsync(p => p.password == newPatient.password);
+            if (exist != null)
+            {
+                throw new Exception("This password already in use, please choose another");
+            }
+            newPatient.id = newPatient.password;
+             _context.Patients.Add(newPatient);
             await _context.SaveChangesAsync();
         }
-
         public async Task<bool> SaveAsync(Patient patient)
         {
-
             try
             {
-                List<Location> locationsToUpdate =await _context.Locations.Where(l => l.patientId == patient.id).ToListAsync();
+                List<Location> locationsToUpdate = await _context.Locations.Where(l => l.patientId == patient.id).ToListAsync();
                 _context.Locations.RemoveRange(locationsToUpdate);
                 await _context.Locations.AddRangeAsync(patient.locations);
-               var success= await _context.SaveChangesAsync();
-                if (success == 0)
+                var success = await _context.SaveChangesAsync();
+                //it was if(success==0), but I think that SaveChangesAsync() return the number of row was effected in db.
+                if (success > 0)
                 {
-                  Log.Information("saved locations for patient {pateient}", patient.id);
+                    Log.Information("saved locations for patient {patient}", patient.id);
                     return true;
                 }
                 return false;
@@ -74,16 +74,11 @@ namespace CoronaApp.Services
             //?
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
+                Log.Information(e.Message);
                 return false;
             }
-
-
         }
-
-
-
-
-
         //public static async Task<List<Location>> GetLocationsByPatientAsync(String id)
         //{
         //    try

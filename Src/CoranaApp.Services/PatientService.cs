@@ -19,19 +19,17 @@ namespace CoronaApp.Services
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IConfiguration _configuration;
-        private readonly IMessageSession _massageSession;
+       // private readonly IMessageSession _massageSession;
         static ILog log = LogManager.GetLogger<PatientService>();
-        public PatientService()
-        {
-        }
 
         public PatientService(IPatientRepository patientRepository,
-            IConfiguration configuration,
-            IMessageSession massageSession)
+            IConfiguration configuration
+          //  IMessageSession massageSession
+          )
         {
             _patientRepository = patientRepository;
             _configuration = configuration;
-            _massageSession = massageSession;
+           // _massageSession = massageSession;
         }
         public async Task<Patient> GetAsync(string id)
         {
@@ -46,44 +44,50 @@ namespace CoronaApp.Services
         public async Task<Patient> AuthenticateAsync(string userName, string password)
         {
             Patient user = await _patientRepository.IsValidAsync(userName, password);
-            if (user == null)
-            {
-                return null;
-            }
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings").GetSection("Secret").Value);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.name),
-                     new Claim("userName", user.name),
-                     new Claim("userId", user.id)
-                }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.token = tokenHandler.WriteToken(token);
+            //--------------------useful for jwt, but now we don't need it anymore.---------------
+            //if (user == null)
+            //{
+            //    return null;
+            //}
+            //var tokenHandler = new JwtSecurityTokenHandler();
+            //var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings").GetSection("Secret").Value);
+            //var tokenDescriptor = new SecurityTokenDescriptor
+            //{
+            //    Subject = new ClaimsIdentity(new Claim[]
+            //    {
+            //        new Claim(ClaimTypes.Name, user.name),
+            //         new Claim("userName", user.name),
+            //         new Claim("userId", user.id)
+            //    }),
+            //    Expires = DateTime.UtcNow.AddHours(1),
+            //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            //};
+            //var token = tokenHandler.CreateToken(tokenDescriptor);
+            //user.token = tokenHandler.WriteToken(token);
             return user;
         }
 
-        public async Task<Patient> RegisterAsync(Patient newPatient)
+        public async Task<string> RegisterAsync(Patient newPatient)
         {
 
-            await _patientRepository.AddAsync(newPatient);
-            var patient = await AuthenticateAsync(newPatient.name, newPatient.password);
-            return patient;
+            try
+            {
+                await _patientRepository.AddAsync(newPatient);
+                //var patient = await AuthenticateAsync(newPatient.name, newPatient.password);
+                return "register succeded";
 
-            //IServiceBus
-
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return e.Message;
+            }
         }
 
 
 
         public bool post(Patient patient)
         {
-
             return true;
         }
 
@@ -107,20 +111,18 @@ namespace CoronaApp.Services
 
         public async Task InvokeCommandCreateUser(string patientId)
         {
-          
-            //var command = new CreateUser()
-            //{
-            //    UserId = patientId
-            //};
 
-            // Send the command to the local endpoint
-           // log.Info($"Sending CreateUser command, UserId = {command.UserId}");
-            await _massageSession.Publish<UserCreated>(message => {
-                message.UserId = patientId;
-            }) .ConfigureAwait(false);
-               
+        //    //var command = new CreateUser()
+        //    //{
+        //    //    UserId = patientId
+        //    //};
 
-            
+        //    // Send the command to the local endpoint
+        //    // log.Info($"Sending CreateUser command, UserId = {command.UserId}");
+        //    await _massageSession.Publish<UserCreated>(message =>
+        //    {
+        //        message.UserId = patientId;
+        //    }).ConfigureAwait(false);
         }
 
     }
