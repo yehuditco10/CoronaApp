@@ -37,7 +37,7 @@ namespace CoronaApp.Services
         public async Task<Patient> IsValidAsync(string userName, string password)
         {
             //  List<Patient> li = _context.Patients.ToList();
-            Patient patient = await _context.Patients
+            Patient patient = await _context.Patients.Include(l=>l.locations)
                 .FirstOrDefaultAsync(p => p.name == userName && p.password == password);
             if (patient != null)
                 return patient;

@@ -21,7 +21,7 @@ namespace CoronaApp.Dal
         //{
         //    if (!optionsBuilder.IsConfigured)
         //    {
-        //        optionsBuilder.UseSqlServer("Data Source = ILBHARTMANLT; Initial Catalog = Corona_DB; Integrated Security = True");
+        //        optionsBuilder.UseSqlServer("Data Source = DESKTOP-1HT6NS2; Initial Catalog = Corona_DB; Integrated Security = True");
         //        base.OnConfiguring(optionsBuilder);
         //    }
         //}
