@@ -13,6 +13,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IO;
 using System.Reflection;
 using System;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace CoronaApp.Api
 {
@@ -37,7 +40,24 @@ namespace CoronaApp.Api
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             // services.AddScoped<IUserService, UserService>();
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                       builder =>
+                       {
+                           builder.AllowAnyOrigin()
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod()
+                                  .WithExposedHeaders("X-Pagination");
+                       });
+            });
+        
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(x => {
+                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = x.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
+            });
             var appSettingsSection = Configuration.GetSection("AppSettings").GetSection("Secret");
             //services.Configure<AppSetting>(appSettingsSection);
 
@@ -107,6 +127,9 @@ namespace CoronaApp.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors("AllowAllOrigins");
+           
 
             app.UseEndpoints(endpoints =>
             {

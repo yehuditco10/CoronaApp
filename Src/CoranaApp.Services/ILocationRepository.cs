@@ -9,5 +9,6 @@ namespace CoronaApp.Services
     public interface ILocationRepository
     {
         Task<ICollection<Location>> GetAsync(LocationSearch locationSearch);
+        Task<ICollection<Location>> GetByPagingAsync(int pageIndex, int numForPage);
     }
 }

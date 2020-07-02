@@ -19,6 +19,7 @@
     <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.6.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.5" />
   </ItemGroup>
 
   <ItemGroup>

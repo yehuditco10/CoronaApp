@@ -8,6 +8,9 @@ namespace CoronaApp.Services
 {
    public interface ILocationService
     {
+
         public Task<ICollection<Location>> GetAsync(LocationSearch locationSearch);
+        public Task<ICollection<Location>> GetByPagingAsync(int pageIndex, int numForPage);
+
     }
 }

@@ -23,5 +23,11 @@ namespace CoronaApp.Services
             var res = await _locationRepository.GetAsync(locationSearch);
             return res;
         }
+
+        public async Task<ICollection<Location>> GetByPagingAsync(int pageIndex, int numForPage)
+        {
+            var res = await _locationRepository.GetByPagingAsync(pageIndex, numForPage);
+            return res;
+        }
     }
 }

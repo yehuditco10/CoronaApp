@@ -17,7 +17,7 @@ namespace CoronaApp.Services
         {
             this._coronaContext = _coronaContext;
         }
-        public async Task< ICollection<Location>> GetAsync(LocationSearch locationSearch = null)
+        public async Task<ICollection<Location>> GetAsync(LocationSearch locationSearch = null)
         {
             try
             {
@@ -50,7 +50,26 @@ namespace CoronaApp.Services
             {
                 throw new Exception("exeption in search function");
             }
-            
+
+        }
+
+        public async Task<ICollection<Location>> GetByPagingAsync(int pageIndex, int numForPage)
+        {
+            try
+            {
+                var list = (from t in _coronaContext.Locations
+                            orderby t.id
+                            select t).Take(numForPage);
+                var list2 = _coronaContext.Locations
+                           .OrderBy(t => t.id)
+                           .Take(5);
+                return await _coronaContext.Locations.ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
