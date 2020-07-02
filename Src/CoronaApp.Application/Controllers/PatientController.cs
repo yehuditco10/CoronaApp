@@ -40,15 +40,18 @@ namespace CoronaApp.Api.Controllers
         }
         // POST api/<PatientController>
         [HttpPost]
-        public async void Post([FromBody]Patient patient)
+        public async Task<IActionResult> Post([FromBody]Patient patient)
         {
+            if (patient.locations == null)
+                return new UnsupportedMediaTypeResult();
             try
             {
                 await _patientService.SaveAsync(patient);
+                return Ok(true);
             }
             catch (Exception e)
             {
-                throw e;
+                return BadRequest(e.Message);
             }
 
         }

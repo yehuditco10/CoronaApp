@@ -19,7 +19,7 @@ namespace CoronaApp.Services
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IConfiguration _configuration;
-       // private readonly IMessageSession _massageSession;
+        // private readonly IMessageSession _massageSession;
         static ILog log = LogManager.GetLogger<PatientService>();
 
         public PatientService(IPatientRepository patientRepository,
@@ -29,7 +29,7 @@ namespace CoronaApp.Services
         {
             _patientRepository = patientRepository;
             _configuration = configuration;
-           // _massageSession = massageSession;
+            // _massageSession = massageSession;
         }
         public async Task<Patient> GetAsync(string id)
         {
@@ -39,6 +39,10 @@ namespace CoronaApp.Services
         public async Task SaveAsync(Patient patient)
         {
             bool success = await _patientRepository.SaveAsync(patient);
+            if (success == false)
+            {
+                throw new Exception("error in save changes");
+            }
         }
 
         public async Task<Patient> AuthenticateAsync(string userName, string password)
@@ -112,17 +116,17 @@ namespace CoronaApp.Services
         public async Task InvokeCommandCreateUser(string patientId)
         {
 
-        //    //var command = new CreateUser()
-        //    //{
-        //    //    UserId = patientId
-        //    //};
+            //    //var command = new CreateUser()
+            //    //{
+            //    //    UserId = patientId
+            //    //};
 
-        //    // Send the command to the local endpoint
-        //    // log.Info($"Sending CreateUser command, UserId = {command.UserId}");
-        //    await _massageSession.Publish<UserCreated>(message =>
-        //    {
-        //        message.UserId = patientId;
-        //    }).ConfigureAwait(false);
+            //    // Send the command to the local endpoint
+            //    // log.Info($"Sending CreateUser command, UserId = {command.UserId}");
+            //    await _massageSession.Publish<UserCreated>(message =>
+            //    {
+            //        message.UserId = patientId;
+            //    }).ConfigureAwait(false);
         }
 
     }
